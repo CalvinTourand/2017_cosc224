@@ -233,6 +233,7 @@ var $jq = jQuery.noConflict(); $jq(document).ready(function() {
 		<aside id="text-2" class="widget widget_text">			<div class="textwidget"><div class="ftr-buttons">
 <a class="donate" title="Donate Now" href="http://www.canadahelps.org/CharityProfilePage.aspx?CharityID=s12154" target="_blank">Donate Now</a>
 <a href="wish-list/" class="wishlist">Our Wish List</a>
+<a href="loginPage.php" class="emplogin" style = "position: relative; top: 10px; left: 77px; display:block; width:100px; height:30px; ">Employee Login</a>
 </div></div>
 		</aside>	</div><!-- #second .widget-area -->
 	
