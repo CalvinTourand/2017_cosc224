@@ -2296,7 +2296,8 @@ body.page-template-home-page-php #supplementary #second { /*width:18%;*/ width:1
 body.page-template-home-page-php #supplementary .ftr-buttons { padding-top:20px; }
 body.page-template-home-page-php #supplementary .ftr-buttons a.donate { background:url(images/btn-donate-now.png) no-repeat; display:block; width:171px; height:37px; text-indent:-9999em; margin-bottom:9px; }
 body.page-template-home-page-php #supplementary .ftr-buttons a.wishlist { background:url(images/btn-wishlist.png) no-repeat; display:block; width:171px; height:37px; text-indent:-9999em; }
-
+/*body.page-template-home-page-php #supplementary .ftr-buttons a.emplogin { position = relative; top: 10px; display:block; width:40px; height:37px; text-indent:-9999em; }
+*/
 body.page-template-home-page-php #supplementary #third { /*width:76%;*/ width:723px; padding:12px 0; }
 body.page-template-home-page-php #supplementary #third .textwidget { background:url(images/logo-ministry.png) no-repeat left center; height:40px; line-height:50px; padding-left:65px; color:#000; margin-left:1.6%; }
 
@@ -2338,6 +2339,7 @@ body.blog .footer-graphic { background:url(images/footer-inner.gif) no-repeat; w
 .footer-inner .ftr-buttons { /*width:18%;*/ width:171px; float:right; padding-right:25px; margin:0; }
 .footer-inner .ftr-buttons a.donate { background:url(images/btn-donate-now.png) no-repeat; display:block; width:171px; height:37px; text-indent:-9999em; margin-bottom:9px; }
 .footer-inner .ftr-buttons a.wishlist { background:url(images/btn-wishlist.png) no-repeat; display:block; width:171px; height:37px; text-indent:-9999em; }
+.footer-inner .ftr-buttons a.emplogin { background:url(images/btn-wishlist.png) no-repeat; display:block; width:171px; height:37px; text-indent:-9999em; }
 .footer-inner .fundedby { /*width:67%;*/ width:636px; padding:12px 0 12px 65px; background:url(images/logo-ministry.png) no-repeat left center; height:40px; line-height:50px; color:#000; margin-left:1.6%; clear:left; }
 
 
