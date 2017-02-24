@@ -126,27 +126,32 @@
 				
 				<span class="wdform-label">Username:</span>
 				<div style=" width: 180px;" >
-				<input type="text" name="username" style="width: 100%; height: 25px" >
+				<input type="text" id="username" style="width: 100%; height: 25px" >
 				
 				<span class="wdform-label">First name:</span>
 				<div style=" width: 180px;" >
-				<input type="text" name="fname" style="width: 100%; height: 25px" >
+				<input type="text" id="fname" style="width: 100%; height: 25px" >
             
 				<span class="wdform-label">Last name:</span>
 				<div style=" width: 180px;" >
-				<input type="text" name="lname" style="width: 100%; height: 25px" >
+				<input type="text" id="lname" style="width: 100%; height: 25px" >
             
 				<span class="wdform-label">Authority:</span>
 				<div style=" width: 180px;" >
-				<input type="text" name="authority" style="width: 100%; height: 25px" >
+            <select id="authority" onchange="changeAuthority()" style="width: 100%; height: 25px" >
+               <option value="none">
+               <option value="employee">Employee
+               <option value="maintenance">Maintenance
+               <option value="manager">Manager
+            </select>
             
 				<span class="wdform-label">Password:</span>
 				<div style=" width: 180px;" >
-				<input type="password" name="password" style="width: 100%; height: 25px" >
+				<input type="password" id="password" style="width: 100%; height: 25px" >
 
 				<span class="wdform-label">Confirm password:</span>
 				<div style=" width: 180px;" >
-				<input type="password" name="confirm" style="width: 100%; height: 25px" >            
+				<input type="password" id="confirm" style="width: 100%; height: 25px" >            
 				
 				<!-- User authentication process -->
 				<div style="display: table-cell;vertical-align: middle;">
