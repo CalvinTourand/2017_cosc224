@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width" />
-<title>Contact | Transition House</title>
+<title>Create Account | Transition House</title>
 <link rel="profile" href="http://gmpg.org/xfn/11" />
 <link rel="stylesheet" type="text/css" media="all" href="http://vwts.ca/wp-content/themes/transition-house/style.css" />
 <link rel="pingback" href="http://vwts.ca/xmlrpc.php" />
@@ -148,15 +148,11 @@
 				<div style=" width: 180px;" >
 				<input type="password" name="confirm" style="width: 100%; height: 25px" >            
 				
-				<h1>&nbsp;</h1>
-				<div class="wdform-label-section" style=" width: 250px;"><span class="wdform-label">Type the characters you see here:
-				
 				<!-- User authentication process -->
 				<div style="display: table-cell;vertical-align: middle;">
-					<input type="text" name="captcha" style="width: 75px; margin-bottom: 5px; margin-top: 5px">
 					<div class="wdform-label-section" style="display: table-cell;"><div class="wdform-element-section " style="display: table-cell;">
-					<button type="button" name="submit" class="button-submit" >Submit</button> <!-- Submit Button -->
-					<button type="button" name="reset" class="button-reset">Reset</button></div></div></div> <!-- Reset the feilds button -->
+					<input type="submit" ></input> <!-- Submit Button -->
+					<input type="reset" ></input></div></div></div> <!-- Reset Button -->
 				<div class="wdform_preload"></div></form>
 			</div><!-- .entry-content -->
 		<!-- .entry-meta -->
