@@ -126,37 +126,37 @@
 				
 				<span class="wdform-label">Username:</span>
 				<div style=" width: 180px;" >
-				<input type="text" style="width: 100%; height: 25px" >
+				<input type="text" name="username" style="width: 100%; height: 25px" >
 				
 				<span class="wdform-label">First name:</span>
 				<div style=" width: 180px;" >
-				<input type="text" style="width: 100%; height: 25px" >
+				<input type="text" name="fname" style="width: 100%; height: 25px" >
             
 				<span class="wdform-label">Last name:</span>
 				<div style=" width: 180px;" >
-				<input type="text" style="width: 100%; height: 25px" >
+				<input type="text" name="lname" style="width: 100%; height: 25px" >
             
 				<span class="wdform-label">Authority:</span>
 				<div style=" width: 180px;" >
-				<input type="text" style="width: 100%; height: 25px" >
+				<input type="text" name="authority" style="width: 100%; height: 25px" >
             
 				<span class="wdform-label">Password:</span>
 				<div style=" width: 180px;" >
-				<input type="password" style="width: 100%; height: 25px" >
+				<input type="password" name="password" style="width: 100%; height: 25px" >
 
 				<span class="wdform-label">Confirm password:</span>
 				<div style=" width: 180px;" >
-				<input type="password" style="width: 100%; height: 25px" >            
+				<input type="password" name="confirm" style="width: 100%; height: 25px" >            
 				
 				<h1>&nbsp;</h1>
 				<div class="wdform-label-section" style=" width: 250px;"><span class="wdform-label">Type the characters you see here:
 				
 				<!-- User authentication process -->
 				<div style="display: table-cell;vertical-align: middle;">
-					<input type="text" style="width: 75px; margin-bottom: 5px; margin-top: 5px">
+					<input type="text" name="captcha" style="width: 75px; margin-bottom: 5px; margin-top: 5px">
 					<div class="wdform-label-section" style="display: table-cell;"><div class="wdform-element-section " style="display: table-cell;">
-					<button type="button" class="button-submit" >Submit</button> <!-- Submit Button -->
-					<button type="button" class="button-reset">Reset</button></div></div></div> <!-- Reset the feilds button -->
+					<button type="button" name="submit" class="button-submit" >Submit</button> <!-- Submit Button -->
+					<button type="button" name="reset" class="button-reset">Reset</button></div></div></div> <!-- Reset the feilds button -->
 				<div class="wdform_preload"></div></form>
 			</div><!-- .entry-content -->
 		<!-- .entry-meta -->
