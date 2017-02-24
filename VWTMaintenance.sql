@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 22, 2017 at 11:37 AM
+-- Generation Time: Feb 24, 2017 at 10:05 AM
 -- Server version: 5.7.17-0ubuntu0.16.04.1
 -- PHP Version: 7.0.8-0ubuntu0.16.04.3
 
@@ -55,18 +55,20 @@ CREATE TABLE `requests` (
   `program` varchar(20) DEFAULT NULL,
   `site` varchar(20) DEFAULT NULL,
   `description` varchar(200) DEFAULT NULL,
-  `reqDate` date DEFAULT NULL,
+  `reqDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `approvalDate` date DEFAULT NULL,
+  `approvalNotes` varchar(200) DEFAULT NULL,
   `completionDate` date DEFAULT NULL,
-  `status` varchar(13) DEFAULT NULL
+  `completionNotes` varchar(200) DEFAULT NULL,
+  `status` varchar(13) DEFAULT 'Not Approved'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `requests`
 --
 
-INSERT INTO `requests` (`reqID`, `username`, `reqTitle`, `priority`, `program`, `site`, `description`, `reqDate`, `approvalDate`, `completionDate`, `status`) VALUES
-(1, 'Rbustle', 'Junior\'s problems', 4, 'cosc205', 'c288', 'I don\'t know what is wrong, specifically...But something ain\'t right.', '2017-02-03', NULL, NULL, NULL);
+INSERT INTO `requests` (`reqID`, `username`, `reqTitle`, `priority`, `program`, `site`, `description`, `reqDate`, `approvalDate`, `approvalNotes`, `completionDate`, `completionNotes`, `status`) VALUES
+(1, 'Rbustle', 'Junior\'s problems', 4, 'cosc205', 'c288', 'I don\'t know what is wrong, specifically...But something ain\'t right.', '2017-02-03 08:00:00', NULL, NULL, NULL, NULL, NULL);
 
 --
 -- Indexes for dumped tables
