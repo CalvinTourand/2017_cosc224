@@ -1,10 +1,3 @@
-<!DOCTYPE html>
-<html lang="en-US">
-<head>
-<meta charset="UTF-8" />
-<title>Create Account</title>
-</head>
-
 <body>
 	<h1>Create Account</h1>
 	<form action="" method="POST">
@@ -24,36 +17,40 @@
 		<input type="password" name="password"><br>
 		Confirm password:<br>
 		<input type="password" name="confirm"><br>            
-		<input type="submit" ></input>
-		<input type="reset" ></input>
+		<input type="submit" name="submit" >
+		<input type="reset" name="reset" >
    </form>
 </body>
 
+<!--[insert_php]-->
 <?php
-$db_user = $_POST['username'];
-$db_fname = $_POST['fname'];
-$db_lname = $_POST['lname'];
-$db_auth = $_POST['authority'];
-$db_pass = $_POST['password'];
-
-$username="vwts";
-$password="6iekgr3R8xyC";
-$database="information_schema";
-
+if(isset($_POST['username'])){
+$authority;
+switch($_POST['authority']){
+  case "employee":
+    $authority = 1;
+    break;
+  case "maintenance":
+    $authority = 2;
+    break;
+  case "manager":
+    $authority = 3;
+    break;
+}
+$username="vwts_dbman1";
+$password="p0]K,S5Tm,7U";
+$database="vwts_wpdb1";
 $con=mysqli_connect("localhost",$username,$password,$database);
 // Check connection
-if (mysqli_connect_errno())
-  {
+if (mysqli_connect_errno()){
   echo "Failed to connect to MySQL: " . mysqli_connect_error();
   }
   
-  mysqli_query($con,"INSERT INTO employees (username, fName, lName, auth, pass) 
-VALUES (".$db_user.", ".$db_fname.", ".db_lname.", ".db_auth.", ".db_pass.")");
-
-// Print auto-generated id
-echo "New record has id: " . mysqli_insert_id($con);
-
+  $result = mysqli_query($con,"INSERT INTO employees VALUES ('".$_POST['username']."', '".$_POST['fname']."', '".$_POST['lname']."', ".$authority.", PASSWORD('".$_POST['password']."'))");
+  echo $result." is the result";
 mysqli_close($con); 
 //put header here to redirect back to login page
+header('location: http://localhost/wordpress/?page_id=1938');
+}
 ?>
-</html>
+<!--[/insert_php]-->
