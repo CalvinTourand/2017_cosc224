@@ -24,6 +24,11 @@
 
 <!--[insert_php]-->
 <?php
+//CHECK IF MANAGER, USE COOKIES - Russell may know how to use?
+//if(cookie(authority) != 3)
+//   header('location: http://localhost/wordpress/?page_id=1938');
+
+
 if(isset($_POST['username'])){
 $authority;
 switch($_POST['authority']){
@@ -37,6 +42,7 @@ switch($_POST['authority']){
     $authority = 3;
     break;
 }
+if($_POST['password'] == $_POST['confirm']){
 $username="vwts_dbman1";
 $password="p0]K,S5Tm,7U";
 $database="vwts_wpdb1";
@@ -51,6 +57,9 @@ if (mysqli_connect_errno()){
 mysqli_close($con); 
 //put header here to redirect back to login page
 header('location: http://localhost/wordpress/?page_id=1938');
+}
+else{
+	header('location: http://localhost/wordpress/createAccount.php');
 }
 ?>
 <!--[/insert_php]-->
