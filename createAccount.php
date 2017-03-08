@@ -30,11 +30,11 @@
 </body>
 
 <?php
-$db_user = echo $_POST['username'];
-$db_fname = echo $_POST['fname'];
-$db_lname = echo $_POST['lname'];
-$db_auth = echo $_POST['authority'];
-$db_pass = echo $_POST['password'];
+$db_user = $_POST['username'];
+$db_fname = $_POST['fname'];
+$db_lname = $_POST['lname'];
+$db_auth = $_POST['authority'];
+$db_pass = $_POST['password'];
 
 $username="vwts";
 $password="6iekgr3R8xyC";
