@@ -30,14 +30,14 @@
 </body>
 
 <?php
-echo $_POST['username'];
-echo $_POST['fname'];
-echo $_POST['lname'];
-echo $_POST['authority'];
-echo $_POST['password'];
+$db_user = echo $_POST['username'];
+$db_fname = echo $_POST['fname'];
+$db_lname = echo $_POST['lname'];
+$db_auth = echo $_POST['authority'];
+$db_pass = echo $_POST['password'];
 
-$username="teamvwt@gmail.com";
-$password="_2\"N%'sR8[p6";
+$username="vwts";
+$password="6iekgr3R8xyC";
 $database="information_schema";
 
 $con=mysqli_connect("localhost",$username,$password,$database);
@@ -48,7 +48,7 @@ if (mysqli_connect_errno())
   }
   
   mysqli_query($con,"INSERT INTO employees (username, fName, lName, auth, pass) 
-VALUES (username, fname, lname, authority, password)");
+VALUES (".$db_user.", ".$db_fname.", ".db_lname.", ".db_auth.", ".db_pass.")");
 
 // Print auto-generated id
 echo "New record has id: " . mysqli_insert_id($con);
