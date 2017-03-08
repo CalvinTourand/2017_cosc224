@@ -5,7 +5,7 @@ echo $_POST['username'];
 echo $_POST['fname'];
 echo $_POST['lname'];
 echo $_POST['authority'];
-echo $_POST['pass'];
+echo $_POST['password'];
 
 $username="teamvwt@gmail.com";
 $password="_2\"N%'sR8[p6";
@@ -19,7 +19,7 @@ if (mysqli_connect_errno())
   }
   
   mysqli_query($con,"INSERT INTO employees (username, fName, lName, auth, pass) 
-VALUES (username, fname, lname, authority, pass)");
+VALUES (username, fname, lname, authority, password)");
 
 // Print auto-generated id
 echo "New record has id: " . mysqli_insert_id($con);
