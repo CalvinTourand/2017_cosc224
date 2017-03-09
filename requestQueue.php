@@ -125,7 +125,7 @@ function findItem($id, $sqli){
             FROM requests r, employees e
             WHERE ".$_GET['id']." = reqID;";
         $findresult = mysqli_query($sqli, $findsql) or die(mysqli_error($sqli));
-        if(mysqli_num_rows($findresult) == 1) {
+        if(mysqli_num_rows($findresult) >= 1) {
             while($info = mysqli_fetch_array($findresult)){
             $request_title = stripslashes($info['reqTitle']);
             $site_name = stripslashes($info['site']);
