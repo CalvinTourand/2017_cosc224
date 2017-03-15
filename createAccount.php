@@ -1,5 +1,7 @@
 <body>
 	<h1>Create Account</h1>
+	<h2><strong>Please enter credentials for a new employee account</strong></h2>
+	<hr />
 	<form action="" method="POST">
 		Username:<br>
 		<input type="text" name="username"><br>
