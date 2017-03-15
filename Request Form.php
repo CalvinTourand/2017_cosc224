@@ -79,4 +79,29 @@
 		</div>
 	</div>
 </body>
+<!--[insert_php]-->
+<?php
+$site = $_POST['site'];
+$program = $_POST['program'];
+$title = $_POST['title'];
+$requestDate = $_POST['requestDate'];
+$employee = $_POST['employee'];
+$priority = $_POST['priority'];
+
+Request made on: ".$requestDate."\n
+Site: ".$site."\n
+Program: ".$site."\n
+Priority: ".$priority."\n
+Request Title: ".$title."\n
+Description:\n".$description."\n\n"
+
+$message = "A maintenance request has been submitted by ".$employee.":\n
+mail('teamvwt@gmail.com', 'Maintenance Request', $message);
+header('location: http://localhost/wordpress/?page_id=1938');
+}
+else{
+	header('location: http://localhost/wordpress/createAccount.php');
+}
+?>
+<!--[/insert_php]-->
 </html>
