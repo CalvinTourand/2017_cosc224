@@ -5,23 +5,26 @@ th, td {
     padding: 8px;
     text-align: left;
     border-bottom: 1px solid black;}
+.filterDiv  {float: left;
+             padding: 1em;}
 </style>
 
 <h1>Maintenance Request</h1>
 <button>Request Maintenance Form</button><br>
 
 Filter by:<br>
-<form>Site:<br>
-    <select id='selectSite' style='padding:5px;'>
+<form>
+    <div class='filterDiv'>Site:
+    <select id='selectSite'>
         <option value='Transition_House'>Transition House
         <option value='Casimir_Court'>Casimir Court
         <option value='46th_Avenue'>46th Avenue
         <option value='Armstrong'>Armstrong
         <option value='Courthouse'>Courthouse
         <option value='Creekside'>Creekside
-    </select>
-    Program:<br>
-    <select  id='selectProgram' style='padding:5px;'>
+    </select></div>
+    <div class='filterDiv'>Program:
+    <select  id='selectProgram'>
       <option value='None'>Program
       <option value='Transition_House'>Transition House
       <option value='Support_to_Young_Parents'>Support to Young Parents
@@ -38,32 +41,32 @@ Filter by:<br>
       <option value='Legal_Services_Community_Partner'>Legal Services Community Partner
       <option value='Prevention_&_Awareness'>Prevention & Awareness
       <option value='Other'>Other
-    </select>
-    Status:<br>
-    <select id='selectStatus' style='padding:5px'>
+    </select></div>
+    <div class='filterDiv'>Status:
+    <select id='selectStatus'>
       <option value='None'>Status 
       <option value='Completed'>Completed
       <option value='notCompleted'>Not Completed
       <option value='notYetApproved'>Not Yet Approved
       <option value='notApproved'>Not Approved
-    </select>
-    Priotity:<br>
-    <select id='selectPriority' style='padding:5px'>
+    </select></div>
+    <div class='filterDiv'>Priority:
+    <select id='selectPriority'>
       <option value='None'>Priority  
       <option value='High'>High
       <option value='Medium'>Medium
       <option value='Low'>Low
-    </select>
+    </select></div>
     <!-- Request Date -->
-    Request Date:<br>
-    <input  type='date' data-date-inline-picker='true' />
+    <div class='filterDiv'>Request Date:
+    <input  type='date' data-date-inline-picker='true'/></div>
     <!-- Approve Date -->
-    Approval Date:<br>
-    <input  type='date' data-date-inline-picker='true' />
+    <div class='filterDiv'>Approval Date:
+    <input  type='date' data-date-inline-picker='true'/></div>
     <!-- Completed Date -->
-    Completed Date:<br>
-    <input type='date' data-date-inline-picker='true' />
-    <input type='button' value='Filter'>
+    <div class='filterDiv'>Completed Date:
+    <input type='date' data-date-inline-picker='true'/></div>
+    <div class='filterDiv'><input type='button' value='Filter' style='float:left'></div>
 </form>
 <br><br>
 
