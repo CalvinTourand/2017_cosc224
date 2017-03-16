@@ -1,28 +1,28 @@
 <body>
-	<h1>Create Account</h1>
-	<h2><strong>Please enter credentials for a new employee account</strong></h2>
-	<hr />
-	<?php /*[insert_php]*/if($_SESSION['CreateError']){echo"
-		<h2>".$_SESSION['logError']."</h2>";} /*[/insert_php]*/?>
-	<form action="" method="POST">
-		Username:<br>
-		<input type="text" name="username"><br>
-		First name:<br>
-		<input type="text" name="fname"><br>
-		Last name:<br>
-		<input type="text" name="lname"><br>
-		Authority:<br>
-		<select name="authority" onchange="changeAuthority()">
+<h1>Create Account</h1>
+<h2><strong>Please enter credentials for a new employee account</strong></h2>
+<hr />
+<?php /*[insert_php]*/if($_SESSION['CreateError']){echo"
+	<h2>".$_SESSION['logError']."</h2>";} /*[/insert_php]*/?>
+<form action="" method="POST">
+	Username:<br>
+	<input type="text" name="username"><br>
+	First name:<br>
+	<input type="text" name="fname"><br>
+	Last name:<br>
+	<input type="text" name="lname"><br>
+	Authority:<br>
+<select name="authority" onchange="changeAuthority()">
          <option value="employee">Employee
          <option value="maintenance">Maintenance
          <option value="manager">Manager
-      </select><br>
-		Password:<br>
-		<input type="password" name="password"><br>
-		Confirm password:<br>
-		<input type="password" name="confirm"><br>            
-		<input type="submit" name="submit" >
-		<input type="reset" name="reset" >
+</select><br>
+	Password:<br>
+	<input type="password" name="password"><br>
+	Confirm password:<br>
+	<input type="password" name="confirm"><br>            
+	<input type="submit" name="submit" >
+	<input type="reset" name="reset" >
    </form>
 </body>
 
@@ -58,7 +58,7 @@ if ((filter_input(INPUT_POST, 'confirm'))
     //put header here to redirect back to login page
     header('location: http://localhost/wordpress/?page_id=1805');
     }else{
-            $_SESSION['CreateError'] = "Passwords Do Not Match";
+	    $_SESSION['CreateError'] = "Passwords Do Not Match";
             header('location: http://localhost/wordpress/?page_id=2032');
     }
 }
