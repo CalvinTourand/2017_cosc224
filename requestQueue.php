@@ -6,7 +6,8 @@ th, td {
     text-align: left;
     border-bottom: 1px solid black;}
 .filterDiv  {float: left;
-             padding: 1em;}
+             padding: 5px;}
+select {padding: 4px;}
 </style>
 
 <h1>Maintenance Request</h1>
@@ -14,9 +15,9 @@ th, td {
 <hr>
 <button>Request Maintenance Form</button><br>
 
-Filter by:<br>
 <form>
-    <div class='filterDiv'>Site:
+<h3>Filter by:</h3>
+    <div class='filterDiv'><h3>Site:</h3>
     <select id='selectSite'>
         <option value='Transition_House'>Transition House
         <option value='Casimir_Court'>Casimir Court
@@ -25,7 +26,7 @@ Filter by:<br>
         <option value='Courthouse'>Courthouse
         <option value='Creekside'>Creekside
     </select></div>
-    <div class='filterDiv'>Program:
+    <div class='filterDiv'><h3>Program:</h3>
     <select  id='selectProgram'>
       <option value='None'>Program
       <option value='Transition_House'>Transition House
@@ -44,7 +45,7 @@ Filter by:<br>
       <option value='Prevention_&_Awareness'>Prevention & Awareness
       <option value='Other'>Other
     </select></div>
-    <div class='filterDiv'>Status:
+    <div class='filterDiv'><h3>Status:</h3>
     <select id='selectStatus'>
       <option value='None'>Status 
       <option value='Completed'>Completed
@@ -52,7 +53,7 @@ Filter by:<br>
       <option value='notYetApproved'>Not Yet Approved
       <option value='notApproved'>Not Approved
     </select></div>
-    <div class='filterDiv'>Priority:
+    <div class='filterDiv'><h3>Priority:</h3>
     <select id='selectPriority'>
       <option value='None'>Priority  
       <option value='High'>High
@@ -60,19 +61,18 @@ Filter by:<br>
       <option value='Low'>Low
     </select></div>
     <!-- Request Date -->
-    <div class='filterDiv'>Request Date:
+    <div class='filterDiv'><h3>Request Date:</h3>
     <input  type='date' data-date-inline-picker='true'/></div>
     <!-- Approve Date -->
-    <div class='filterDiv'>Approval Date:
+    <div class='filterDiv'><h3>Approval Date:</h3>
     <input  type='date' data-date-inline-picker='true'/></div>
     <!-- Completed Date -->
-    <div class='filterDiv'>Completed Date:
+    <div class='filterDiv'><h3>Completed Date:</h3>
     <input type='date' data-date-inline-picker='true'/></div>
-    <div class='filterDiv'><input type='button' value='Filter' style='float:left'></div>
+    <div class='filterDiv' style='padding-top:2em'><input type='button' value='Filter'></div>
 </form>
-<br><br>
 
-<table padding: 15px; text-align: left;>
+<table style='border: 1px solid'>
     <tr>
         <th>Request Title</th>
         <th>Site</th>
@@ -85,8 +85,7 @@ Filter by:<br>
         <th></th>
     </tr>
     
-<!--[insert_php]-->
-<?php
+[insert_php]
 $mysqli = mysqli_connect("localhost", "vwts_dbman1", 'p0]K,S5Tm,7U', "vwts_wpdb1");
 $sql = "SELECT reqTitle, priority,
     program, site, description, 
@@ -101,6 +100,7 @@ if (mysqli_num_rows($result) >= 1) {
         $site_name = stripslashes($info['site']);
         $program = stripslashes($info['program']);
         $priority = stripslashes($info['priority']);
+        $program = stripslashes($info['program']);
         $request_date = stripslashes($info['reqDate']);
         $approval_date = stripslashes($info['approvalDate']);
         $finished_date = stripslashes($info['completionDate']);
@@ -121,31 +121,50 @@ if (mysqli_num_rows($result) >= 1) {
             </tr>";
     }
 }
-if (isset($_GET['id'])) {
+if (isset($_GET['id'])) 
     findItem($_GET['id'], $mysqli);
+
+function choosePriority($proiLevel){
+    $priority;
+    switch($proiLevel){
+        case 1:
+        $priority = "Low";
+        break;
+        case 2:
+        $priority = "Medium";
+        break;
+        case 3:
+        $priority = "High";
+        break;
+        default:
+        $priority = "No Priority";
+        break;
+    }
+    return $priority;
 }
+
 function findItem($id, $sqli){
-    $findsql = "SELECT reqTitle, priority, program, site, description, 
-        reqDate, approvalDate, completionDate, status, e.fName, e.lName
-        FROM requests r, employees e
-        WHERE ".$_GET['id']." = reqID;";
-    $findresult = mysqli_query($sqli, $findsql) or die(mysqli_error($sqli));
-    if(mysqli_num_rows($findresult) >= 1) {
-    while($info = mysqli_fetch_array($findresult)){
-        $request_title = stripslashes($info['reqTitle']);
-        $site_name = stripslashes($info['site']);
-        $program = stripslashes($info['program']);
-        $priority = stripslashes($info['priority']);
-        $reqDate = stripslashes($info['reqDate']);
-        $appvDate = stripslashes($info['approvalDate']);
-        $compDate = stripslashes($info['completionDate']);
-        $status = stripslashes($info['status']);
-        $description = stripslashes($info['description']);
-        $lName = stripslashes($info['lName']);
-        $fName = stripslashes($info['fName']);
+        $findsql = "SELECT reqTitle, priority, program, site, description, 
+            reqDate, approvalDate, completionDate, status, e.fName, e.lName
+            FROM requests r, employees e
+            WHERE ".$_GET['id']." = reqID;";
+        $findresult = mysqli_query($sqli, $findsql) or die(mysqli_error($sqli));
+        if(mysqli_num_rows($findresult) >= 1) {
+            $info = mysqli_fetch_array($findresult);
+            $request_title = stripslashes($info['reqTitle']);
+            $site_name = stripslashes($info['site']);
+            $program = stripslashes($info['program']);
+            $priority = stripslashes($info['priority']);
+            $reqDate = stripslashes($info['reqDate']);
+            $appvDate = stripslashes($info['approvalDate']);
+            $compDate = stripslashes($info['completionDate']);
+            $status = stripslashes($info['status']);
+            $description = stripslashes($info['description']);
+            $lName = stripslashes($info['lName']);
+            $fName = stripslashes($info['fName']);
             
-        echo"
-            <table>
+            echo"
+            <table style='border: 1px solid'>
                 <tr>
                     <th>Title</th><th>Request Date</th><th>Approval Date</th><th>Completion Date</th>
                 </tr><tr>
@@ -157,16 +176,13 @@ function findItem($id, $sqli){
                 </tr><tr>
                     <th>Employee</th><th>Priority</th>
                 </tr><tr>
-                    <td>".$fName." ".$lName."</td><td>".$priority."</td>
+                    <td>".$fName." ".$lName."</td><td>".choosePriority($priority)."</td>
                 </tr>
             </table>
             <h3>Notes</h3>
             <textarea cols='40' rows='3' name='notes'>Notes</textarea>
-            <p><button value='complete'>Complete</button>
-            <button value='approve'>Approve</button></p>";
+            <button value='complete'>Complete</button> <button value='approve'>Approve</button>";
         }
     }
-}
-?>
-<!--[/insert_php]-->
+[/insert_php]
 </table>
