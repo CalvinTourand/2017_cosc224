@@ -26,7 +26,6 @@ if ((filter_input(INPUT_POST, 'username'))
 	//redirect to request queue
         $_SESSION['LogError'] = "";
         header('Location: http://localhost/wordpress/?page_id=1805');
-        
     } else {
 	//redirect back to login form if not authorized
         $_SESSION['LogError'] = "Incorrect username or password";
