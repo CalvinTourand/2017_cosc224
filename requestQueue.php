@@ -10,6 +10,8 @@ th, td {
 </style>
 
 <h1>Maintenance Request</h1>
+<h2>Queue of requested maintenance</h2>
+<hr>
 <button>Request Maintenance Form</button><br>
 
 Filter by:<br>
@@ -123,26 +125,26 @@ if (isset($_GET['id'])) {
     findItem($_GET['id'], $mysqli);
 }
 function findItem($id, $sqli){
-        $findsql = "SELECT reqTitle, priority, program, site, description, 
-            reqDate, approvalDate, completionDate, status, e.fName, e.lName
-            FROM requests r, employees e
-            WHERE ".$_GET['id']." = reqID;";
-        $findresult = mysqli_query($sqli, $findsql) or die(mysqli_error($sqli));
-        if(mysqli_num_rows($findresult) >= 1) {
-            while($info = mysqli_fetch_array($findresult)){
-            $request_title = stripslashes($info['reqTitle']);
-            $site_name = stripslashes($info['site']);
-            $program = stripslashes($info['program']);
-            $priority = stripslashes($info['priority']);
-            $reqDate = stripslashes($info['reqDate']);
-            $appvDate = stripslashes($info['approvalDate']);
-            $compDate = stripslashes($info['completionDate']);
-            $status = stripslashes($info['status']);
-            $description = stripslashes($info['description']);
-            $lName = stripslashes($info['lName']);
-            $fName = stripslashes($info['fName']);
+    $findsql = "SELECT reqTitle, priority, program, site, description, 
+        reqDate, approvalDate, completionDate, status, e.fName, e.lName
+        FROM requests r, employees e
+        WHERE ".$_GET['id']." = reqID;";
+    $findresult = mysqli_query($sqli, $findsql) or die(mysqli_error($sqli));
+    if(mysqli_num_rows($findresult) >= 1) {
+    while($info = mysqli_fetch_array($findresult)){
+        $request_title = stripslashes($info['reqTitle']);
+        $site_name = stripslashes($info['site']);
+        $program = stripslashes($info['program']);
+        $priority = stripslashes($info['priority']);
+        $reqDate = stripslashes($info['reqDate']);
+        $appvDate = stripslashes($info['approvalDate']);
+        $compDate = stripslashes($info['completionDate']);
+        $status = stripslashes($info['status']);
+        $description = stripslashes($info['description']);
+        $lName = stripslashes($info['lName']);
+        $fName = stripslashes($info['fName']);
             
-            echo"
+        echo"
             <table>
                 <tr>
                     <th>Title</th><th>Request Date</th><th>Approval Date</th><th>Completion Date</th>
@@ -162,9 +164,9 @@ function findItem($id, $sqli){
             <textarea cols='40' rows='3' name='notes'>Notes</textarea>
             <p><button value='complete'>Complete</button>
             <button value='approve'>Approve</button></p>";
-}
         }
     }
+}
 ?>
 <!--[/insert_php]-->
 </table>
