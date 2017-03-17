@@ -19,7 +19,7 @@
 			<!-- Request form -->
 			<h3><strong>Maintenance Request Form</strong></h3>
 			<hr />
-			<form name="loginForm" action="/contact/" method="post">
+			<form action="" method="POST">
 				<strong>
 				<!-- Container for Left side of form -->
 				<div style= "position: absolute; top: 15%; width: 47%;" >				
@@ -96,7 +96,7 @@ Request Title: ".$title."\n
 Description:\n".$description."\n\n"
 
 $message = "A maintenance request has been submitted by ".$employee.":\n
-mail('teamvwt@gmail.com', 'Maintenance Request', $message);
+//mail('teamvwt@gmail.com', 'Maintenance Request', $message);
 header('location: http://localhost/wordpress/?page_id=1938');
 }
 else{
