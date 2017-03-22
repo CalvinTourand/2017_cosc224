@@ -153,6 +153,8 @@ echo "</table>
 
 if (isset($_POST['complete']) && isset($_GET['id']))
     completeRequest(filter_input(INPUT_GET,id), filter_input(INPUT_POST,notes), $mysqli);
+if (isset($_POST['approve']) && isset($_GET['id']))
+    approveRequest(filter_input(INPUT_GET,id), filter_input(INPUT_POST,notes), $mysqli);
 //If queue item selected display the details page
 if (isset($_GET['id'])) 
     findItem(filter_input(INPUT_GET,id), $mysqli);
@@ -177,11 +179,20 @@ function choosePriority($proiLevel){
     return $priority;
 }
 
-function completeRequest($id, $notes, $sqli){
+//Updating requests when completed
+function completeRequest($id, $notes, $sqliConnect){
     $completeSQL = "UPDATE requests
-            SET completionDate='SYSDATE', completionNotes='".$notes."'
+            SET completionDate= SYSDATE(), completionNotes='".$notes."', status='Completed'
             WHERE reqID=".$id.";";
-    $completeResult = mysqli_query($sqli, $completeSQL) or die(mysqli_error($sqli));
+    $completeResult = mysqli_query($sqliConnect, $completeSQL) or die(mysqli_error($sqliConnect));
+}
+
+//Updating requests when approved
+function approveRequest($id, $notes, $sqliConnect){
+    $completeSQL = "UPDATE requests
+            SET approvalDate= SYSDATE(), approvalNotes='".$notes."', status='Approved'
+            WHERE reqID=".$id.";";
+    $completeResult = mysqli_query($sqliConnect, $completeSQL) or die(mysqli_error($sqliConnect));
 }
 
 //Takes in choosen id and the sqli connection
