@@ -239,7 +239,7 @@ function findItem($id, $sqli){
             <h3>Notes</h3>
             <form action='' method='POST'>
             <textarea cols='40' rows='3' name='notes'>Notes</textarea>
-            <input type='submit' value='Complete' name='complete'> <input type='submit' value='Approve' name='complete'>
+            <input type='submit' value='Complete' name='complete'> <input type='submit' value='Approve' name='approve'>
             </form>";
     }
 }
