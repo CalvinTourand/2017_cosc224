@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width" />
 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<script>
+$(document).ready( function() {
+   $(".ui-loader").hide();
+});
+</script>
 <style>
 /*  <!-- CSS for making the buttons look nice. Example: Border shade on buttons -->  */
 .ui-btn{opacity:1}.ui-select .ui-btn select{ /* <!-- CSS for drop down buttons --> */
@@ -44,7 +49,7 @@
 			<!-- Request form -->
 			<h3><strong>Maintenance Request Form</strong></h3>
 			<hr />
-			<form name="loginForm" action="/contact/" method="post">
+			<form name="loginForm" action="requestQueue.php" method="post">
 				<strong>
 				<!-- Container for Left side of form -->
 				<div style= "position: absolute; top: 17%; width: 47%;">				
@@ -62,8 +67,8 @@
 						<option value="Casimir Court">Casimir Court
 						<option value="46th Avenue">46th Avenue
 						<option value="Armstrong">Armstrong
-						<option value="CourtCourthouse">CourtCourthouse 
-						<option value="CourtCreekside">CourtCreekside 
+						<option value="Courthouse">Courthouse 
+						<option value="Court Creekside">Court Creekside 
 					</select>
 					
 					Program:
@@ -113,16 +118,23 @@ $title = $_POST['title'];
 $requestDate = $_POST['requestDate'];
 $employee = $_POST['employee'];
 $priority = $_POST['priority'];
+$desc = $_POST['description'];
 
+//specify FROM here
+$fromHeader = "From: teamvwt@gmail.com";
+
+//specify message to put in email here
+$message = "A maintenance request has been submitted by ".$employee.":\n\n
 Request made on: ".$requestDate."\n
 Site: ".$site."\n
 Program: ".$site."\n
 Priority: ".$priority."\n
 Request Title: ".$title."\n
-Description:\n".$description."\n\n"
+Description:\n".$desc;
 
-$message = "A maintenance request has been submitted by ".$employee.":\n
-//mail('teamvwt@gmail.com', 'Maintenance Request', $message);
+//send email to manager(s).  Specify TO, title, message to send (created above), and header(created above)
+bool mail('teamvwt@gmail.com', 'Maintenance Request', $message, $headers);
+
 header('location: http://localhost/wordpress/?page_id=1938');
 }
 else{
