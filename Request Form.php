@@ -56,6 +56,16 @@
 					  <option value="High">High
 					</select>
 					
+					Locations:  
+					<select id="selectSite"> 
+						<option value="Transition House">Transition House
+						<option value="Casimir Court">Casimir Court
+						<option value="46th Avenue">46th Avenue
+						<option value="Armstrong">Armstrong
+						<option value="CourtCourthouse">CourtCourthouse 
+						<option value="CourtCreekside">CourtCreekside 
+					</select>
+					
 					Program:
 					<select id="selectProgram"> 
 						<option value="Transition House">Transition House
@@ -75,15 +85,7 @@
 						<option value="Other">Other
 					</select>
 				
-					Locations:  
-					<select id="selectSite"> 
-						<option value="Transition House">Transition House
-						<option value="Casimir Court">Casimir Court
-						<option value="46th Avenue">46th Avenue
-						<option value="Armstrong">Armstrong
-						<option value="CourtCourthouse">CourtCourthouse 
-						<option value="CourtCreekside">CourtCreekside 
-					</select>
+					
 				</div>
 
 				<!-- Right side of Form -->
