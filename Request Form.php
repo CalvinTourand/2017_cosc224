@@ -49,13 +49,14 @@ $(document).ready( function() {
 			<!-- Request form -->
 			<h3><strong>Maintenance Request Form</strong></h3>
 			<hr />
-			<form name="loginForm" action="requestQueue.php" method="post">
+			<form name="requestForm" action="Request Form.php" method="POST">
 				<strong>
 				<!-- Container for Left side of form -->
 				<div style= "position: absolute; top: 17%; width: 47%;">				
 					Title: <input type="text"id = "title" style = "width: 100%">
 					Priority:
-					<select id="selectPriority"> 
+					<select id="selectPriority">
+					  <option value="">Choose Priority
 					  <option value="Low">Low
 					  <option value="Medium">Medium
 					  <option value="High">High
@@ -63,6 +64,7 @@ $(document).ready( function() {
 					
 					Locations:  
 					<select id="selectSite"> 
+						<option value="">Choose Site
 						<option value="Transition House">Transition House
 						<option value="Casimir Court">Casimir Court
 						<option value="46th Avenue">46th Avenue
@@ -73,6 +75,7 @@ $(document).ready( function() {
 					
 					Program:
 					<select id="selectProgram"> 
+						<option value="">Choose Program
 						<option value="Transition House">Transition House
 						<option value="Support to Young Parents">Support to Young Parents
 						<option value="Casimir Court">Casimir Court
@@ -112,7 +115,9 @@ $(document).ready( function() {
 </body>
 </html>
 <?php
-$site = $_POST['site'];
+
+echo "hello";
+/*$site = $_POST['site'];
 $program = $_POST['program'];
 $title = $_POST['title'];
 $requestDate = $_POST['requestDate'];
@@ -120,7 +125,21 @@ $employee = $_POST['employee'];
 $priority = $_POST['priority'];
 $desc = $_POST['description'];
 
-//specify FROM here
+
+if(!$site || !$program || !$title || !$priority){
+	
+}
+
+if((!filter-input(INPUT_POST,'title'))
+	|| (!filter-input(INPUT_POST,'priority'))
+	|| (!filter_input(INPUT_POST,'site'))
+	|| (!filter-input(INPUT_POST,'program'))){
+
+	}else{
+	}
+	}
+
+		//specify FROM here
 $fromHeader = "From: teamvwt@gmail.com";
 
 //specify message to put in email here
@@ -134,12 +153,10 @@ Description:\n".$desc;
 
 //send email to manager(s).  Specify TO, title, message to send (created above), and header(created above)
 bool mail('teamvwt@gmail.com', 'Maintenance Request', $message, $headers);
-
+	
+	
 header('location: http://localhost/wordpress/?page_id=1938');
-}
-else{
-	header('location: http://localhost/wordpress/createAccount.php');
-}
+*/
 ?>
 <!--[/insert_php]-->
 </html>
