@@ -4,33 +4,35 @@ session_start();
 if ((filter_input(INPUT_POST, 'username'))
         && (filter_input(INPUT_POST, 'password'))) {
 //connect to server and select database
-    $mysqli = mysqli_connect("localhost", "vwts_dbman1", 'p0]K,S5Tm,7U', "vwts_wpdb1");    //change these values to match vwt database
+    $mysqli = mysqli_connect("localhost", "root", "karmakali", "VWTMaintenance");    //change these values to match vwt database
 //create and issue the query
     $targetname = filter_input(INPUT_POST, 'username');
     $targetpasswd = filter_input(INPUT_POST, 'password');
-    $sql = "SELECT fName, lName, auth FROM employees WHERE username = '".$targetname.
+    $sql = "SELECT username, auth FROM employees WHERE username = '".$targetname.
         "' AND pass = PASSWORD('".$targetpasswd."')";
 		
     $result = mysqli_query($mysqli, $sql) or die(mysqli_error($mysqli));
 //get the number of rows in the result set; should be 1 if a match
     if (mysqli_num_rows($result) == 1) {
+
 	//if authorized, get the values of f_name l_name
 	while ($info = mysqli_fetch_array($result)) {
-		$f_name = stripslashes($info['fName']);
-		$l_name = stripslashes($info['lName']);
-                $auth = stripslashes($info['auth']);
+		$username = stripslashes($info['username']);
+		$auth = stripslashes($info['auth']);
 	}
+
 	//set authorization cookie
 	setcookie("auth", $auth, time()+60*12, "/", "", 0);
-        //need to set cookies for auth level and employee names
+	//set username cookie
+	setcookie("username"), $username, time()+60*12, "/", "", 0);
 	//redirect to request queue
         $_SESSION['LogError'] = "";
-        header('Location: http://localhost/wordpress/?page_id=1805');
+        header('Location: requestQueue.php');
         
     } else {
 	//redirect back to login form if not authorized
         $_SESSION['LogError'] = "Incorrect username or password";
-	header('Location: http://localhost/wordpress/?page_id=1938');
+	header('Location: loginPage.php');
     }
 }
 ?>
