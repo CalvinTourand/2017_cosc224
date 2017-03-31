@@ -45,8 +45,8 @@ $(document).ready( function() {
 	<div data-role="main" class="ui-content" style = "width:100%; height:100%; z-index:991000;">
 		<!--href is used to refer to the form, it should be the sae as the form's id. -->
 		
-		<a href="#createRequest" data-rel="popup" data-position-to="window"> Create Maintenance Request Form</a>
-		<div data-role="popup" id="createRequest" class="ui-content" style="background-color: white; position: relative; min-width:700px; min-height: 465px; z-index:991000;">
+		<a href="#openRequest" data-rel="popup" data-position-to="window"> Create Maintenance Request Form</a>
+		<div data-role="popup" id="openRequest" class="ui-content" style="background-color: white; position: relative; min-width:700px; min-height: 465px; z-index:991000;">
 			<a href="#" data-rel="back" data-role="button" class="ui-btn-right" data-shadow = "false" style = "text-decoration: none; top:1px; right:1px;">X</a> 
 			<div style = "position: absolute; width:25%; top:10%;">
 				<b>Title</b></br>
@@ -75,13 +75,13 @@ $(document).ready( function() {
 				".$compDate."<hr>
 			</div>
 			
-			<div style = "position: absolute; width:100%; height:40%; top:32%;">
+			<div style = "position: absolute; width:100%; height:22%; top:32%;">
 				<b>Description</b></br>
-				<textarea cols='40' rows='3' name='description' style ="height: 50%; width:95%;"></textarea>
+				<textarea data-role="none" cols='70' rows='3' name='description' style ="resize:none; width:95%;height:100%"></textarea>
 			</div>
-			<div style = "position: absolute; width:100%; height:40%; top:60%;">
+			<div style = "position: absolute; width:100%; height:22%; top:60%;">
 				<b>Notes</b></br>
-				<textarea name='notes' style ="width:95%; height: 30%"></textarea>
+				<textarea name='notes' data-role="none" style ="width:95%; height: 100%"></textarea>
 			</div>
 			<div style = "position: absolute; width:47%; top:87%;">
 				<input type='submit' value='Complete' name='complete'>
