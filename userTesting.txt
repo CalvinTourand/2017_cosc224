@@ -1,9 +1,0 @@
-In this video we will be user testing the web pages for employee login, employee account creation, online maintenance request form, and the request queue page. 
-Tasks for the user – playing as a manager user:
--Login
--Create an account for a pretend employee
--Create a maintenace request
--Find that request on the queue page
--Add notes to the request
--Approve request
-
