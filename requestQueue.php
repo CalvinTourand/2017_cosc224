@@ -1,8 +1,14 @@
+[insert_php]
+session_start();
+if(!isset($_COOKIE['username'])){
+    $_SESSION['LogError'] = "Session has timed out";
+    header('location: http://localhost/wordpress/?page_id=1938');
+}
+[/insert_php]
 <style>
 table {border-collapse: collapse;
-       width: 100%;
-       border: 1px solid grey;}
-th, td {padding: 2em;
+       width: 100%;}
+th, td {padding: .5em;
         border-bottom: 1px solid grey; 
         text-align: center;}
 .filterDiv  {float: left;
@@ -13,10 +19,11 @@ select {padding: 4px;}
 <h1>Maintenance Request</h1>
 <h2>Queue of requested maintenance</h2>
 <hr>
+<div class="filterDiv">
 <!--Link to Maintenance Request Form-->
 <a href=""><button>Request Maintenance Form</button></a>
 <!--Link for managers to create new employee account-->
-<a href="http://localhost/wordpress/?page_id=2032"><button>Create Employee Account</button></a><br>
+<a href="http://localhost/wordpress/?page_id=2032"><button>Create Employee Account</button></a></div>
 
 <!--Filter by option form-->
 <form method="POST">
@@ -77,7 +84,7 @@ select {padding: 4px;}
     <!--Filter by Completed Date -->
     <div class='filterDiv'><h3>Completed Date:</h3>
     <input type='date' data-date-inline-picker='true'/></div>
-    <div class='filterDiv' style='padding-top:2em'><input type='button' value='Filter'></div>
+    <div class='filterDiv' style='padding-top:2em'><input type='button' style='padding: 5px' value='Filter'></div>
 </form>
 
 <!--Start of request queue-->
@@ -98,13 +105,14 @@ select {padding: 4px;}
 //Start session for session variables
 session_start();
 //tableOffset to manage pages displayed on queue
-$tableOffset = 0;
-if(isset($_GET['offset'])){
-    if($tableOffset > 10 && $_GET['offset'] == -10)
-         $tableOffset += filter_input(INPUT_GET,id);
-    else
-         $tableOffset += filter_input(INPUT_GET,id);
+$tableOffset;
+$tableOffset;
+if(isset($_GET['offset']) && $_GET['offset'] >= 0){
+    $tableOffset = $_GET['offset'];
+}else{
+	$tableOffset = 0;
 }
+
 //Clearing any errors created in the Create Account Page
 unset($_SESSION['CreateError']);
 
@@ -136,25 +144,35 @@ if (mysqli_num_rows($result) >= 1) {
         //Displaying filtered query to page. As well as link to detailed page using id with get.
         echo "
             <tr>
-                <td>".$request_title."</td>
-                <td>".$site_name."</td>
-                <td>".$program."</td>
-                <td>".$priority."</td>
-                <td>".$request_date."</td>
-                <td>".$approval_date."</td>
-                <td>".$finished_date."</td>
-                <td>".$status."</td>
-                <td><a href='http://localhost/wordpress/?page_id=1805&id=".$reqID."&offset=".$tableOffset."'>More Info</a></td>
+                <td style='padding:1em'>".$request_title."</td>
+                <td style='padding:1em'>".$site_name."</td>
+                <td style='padding:1em'>".$program."</td>
+                <td style='padding:1em'>".$priority."</td>
+                <td style='padding:1em'>".$request_date."</td>
+                <td style='padding:1em'>".$approval_date."</td>
+                <td style='padding:1em'>".$finished_date."</td>
+                <td style='padding:1em'>".$status."</td>
+                <td style='padding:1em'><a href='http://localhost/wordpress/?page_id=1805&id=".$reqID."&offset=".$tableOffset."'>More Info</a></td>
             </tr>";
     }
 }
-echo "</table>
-      <div style='text-align:right;'><a href='http://localhost/wordpress/?page_id=1805&offset=-10'><button>Previous</button></a> <a href='http://localhost/wordpress/?page_id=1805&offset=10'><button>Next</button></a><div>";
+
+if(mysqli_num_rows($result) >= 10){
+	$tableOffsetNext = $tableOffset + 10;
+}else{
+	$tableOffsetNext = $tableOffset;
+}
+
+$display =
+	 "</table>
+	 <div style='text-align:right;'><a href='http://localhost/wordpress/?page_id=1805&offset=".($tableOffset-10)."'><button>Previous</button></a> <a href='http://localhost/wordpress/?page_id=1805&offset=".$tableOffsetNext."'><button>Next</button></a></div>";
+echo $display;
 
 if (isset($_POST['complete']) && isset($_GET['id']))
     completeRequest(filter_input(INPUT_GET,id), filter_input(INPUT_POST,notes), $mysqli);
 if (isset($_POST['approve']) && isset($_GET['id']))
     approveRequest(filter_input(INPUT_GET,id), filter_input(INPUT_POST,notes), $mysqli);
+
 //If queue item selected display the details page
 if (isset($_GET['id'])) 
     findItem(filter_input(INPUT_GET,id), $mysqli);
