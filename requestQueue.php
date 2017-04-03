@@ -8,7 +8,7 @@ if(!isset($_COOKIE['username'])){
 <style>
 table {border-collapse: collapse;
        width: 100%;}
-th, td {padding: .5em;
+th, td {padding: .5em; 
         border-bottom: 1px solid grey; 
         text-align: center;}
 .filterDiv  {float: left;
@@ -21,7 +21,7 @@ select {padding: 4px;}
 <hr>
 <div class="filterDiv">
 <!--Link to Maintenance Request Form-->
-<a href=""><button>Request Maintenance Form</button></a>
+<a href="http://localhost/wordpress/?page_id=2226 "><button>Request Maintenance Form</button></a>
 <!--Link for managers to create new employee account-->
 <a href="http://localhost/wordpress/?page_id=2032"><button>Create Employee Account</button></a></div>
 
@@ -87,8 +87,32 @@ select {padding: 4px;}
     <div class='filterDiv' style='padding-top:2em'><input type='button' style='padding: 5px' value='Filter'></div>
 </form>
 
-<!--Start of request queue-->
-<table>
+    
+[insert_php]
+//Connecting to Database
+$mysqli = mysqli_connect("localhost", "vwts_dbman1", 'p0]K,S5Tm,7U', "vwts_wpdb1");
+
+//tableOffset to manage pages displayed on queue
+$tableOffset;
+if(isset($_GET['offset']) && $_GET['offset'] >= 0){
+    $tableOffset = $_GET['offset'];
+}else{
+	$tableOffset = 0;
+}
+
+if (isset($_POST['complete']) && isset($_GET['id']))
+    completeRequest(filter_input(INPUT_GET,id), filter_input(INPUT_POST,notes), $mysqli);
+if (isset($_POST['approve']) && isset($_GET['id']))
+    approveRequest(filter_input(INPUT_GET,id), filter_input(INPUT_POST,notes), $mysqli);
+if (isset($_POST['deny']) && isset($_GET['id']))
+    denyRequest(filter_input(INPUT_GET,id), filter_input(INPUT_POST,notes), $mysqli);
+
+
+//If queue item selected display the details page
+if (isset($_GET['id'])) 
+    findItem(filter_input(INPUT_GET,id), $mysqli);
+
+echo"<table>
     <tr>
         <th>Request Title</th>
         <th>Site</th>
@@ -99,30 +123,17 @@ select {padding: 4px;}
         <th>Finished Date</th>
         <th>Status</th>
         <th></th>
-    </tr>
+    </tr>";
     
-[insert_php]
-//Start session for session variables
-session_start();
-//tableOffset to manage pages displayed on queue
-$tableOffset;
-$tableOffset;
-if(isset($_GET['offset']) && $_GET['offset'] >= 0){
-    $tableOffset = $_GET['offset'];
-}else{
-	$tableOffset = 0;
-}
-
 //Clearing any errors created in the Create Account Page
 unset($_SESSION['CreateError']);
 
-//Connecting to Database
-$mysqli = mysqli_connect("localhost", "vwts_dbman1", 'p0]K,S5Tm,7U', "vwts_wpdb1");
 //Selecting Queue items from request table
 $sql = "SELECT reqTitle, priority,
     program, site, description, 
     reqDate, approvalDate, completionDate, status, username, reqID
     FROM requests
+    ORDER BY reqDate DESC
     LIMIT 10 OFFSET ".$tableOffset;
 //Querying database
 $result = mysqli_query($mysqli, $sql) or die(mysqli_error($mysqli));
@@ -147,7 +158,7 @@ if (mysqli_num_rows($result) >= 1) {
                 <td style='padding:1em'>".$request_title."</td>
                 <td style='padding:1em'>".$site_name."</td>
                 <td style='padding:1em'>".$program."</td>
-                <td style='padding:1em'>".$priority."</td>
+                <td style='padding:1em'>".choosePriority($priority)."</td>
                 <td style='padding:1em'>".$request_date."</td>
                 <td style='padding:1em'>".$approval_date."</td>
                 <td style='padding:1em'>".$finished_date."</td>
@@ -167,15 +178,6 @@ $display =
 	 "</table>
 	 <div style='text-align:right;'><a href='http://localhost/wordpress/?page_id=1805&offset=".($tableOffset-10)."'><button>Previous</button></a> <a href='http://localhost/wordpress/?page_id=1805&offset=".$tableOffsetNext."'><button>Next</button></a></div>";
 echo $display;
-
-if (isset($_POST['complete']) && isset($_GET['id']))
-    completeRequest(filter_input(INPUT_GET,id), filter_input(INPUT_POST,notes), $mysqli);
-if (isset($_POST['approve']) && isset($_GET['id']))
-    approveRequest(filter_input(INPUT_GET,id), filter_input(INPUT_POST,notes), $mysqli);
-
-//If queue item selected display the details page
-if (isset($_GET['id'])) 
-    findItem(filter_input(INPUT_GET,id), $mysqli);
 
 //Function to output priority
 function choosePriority($proiLevel){
@@ -200,24 +202,32 @@ function choosePriority($proiLevel){
 //Updating requests when completed
 function completeRequest($id, $notes, $sqliConnect){
     $completeSQL = "UPDATE requests
-            SET completionDate= SYSDATE(), completionNotes='".$notes."', status='Completed'
+            SET completionDate=SYSDATE(), completionNotes='".$notes."', status='Completed'
             WHERE reqID=".$id.";";
     $completeResult = mysqli_query($sqliConnect, $completeSQL) or die(mysqli_error($sqliConnect));
 }
 
 //Updating requests when approved
 function approveRequest($id, $notes, $sqliConnect){
-    $completeSQL = "UPDATE requests
+    $approvedSQL = "UPDATE requests
             SET approvalDate= SYSDATE(), approvalNotes='".$notes."', status='Approved'
             WHERE reqID=".$id.";";
-    $completeResult = mysqli_query($sqliConnect, $completeSQL) or die(mysqli_error($sqliConnect));
+    $approvedResult = mysqli_query($sqliConnect, $approvedSQL) or die(mysqli_error($sqliConnect));
+}
+
+//Updating requests when approved
+function denyRequest($id, $notes, $sqliConnect){
+    $denySQL = "UPDATE requests
+            SET approvalNotes='".$notes."', status='Denied'
+            WHERE reqID=".$id.";";
+    $denyResult = mysqli_query($sqliConnect, $denySQL) or die(mysqli_error($sqliConnect));
 }
 
 //Takes in choosen id and the sqli connection
 function findItem($id, $sqli){
     //Selecting data for detailed report
     $findsql = "SELECT reqTitle, priority, program, site, description, 
-        reqDate, approvalDate, completionDate, status, e.fName, e.lName
+        reqDate, approvalDate, completionDate, status, e.fName, e.lName, approvalNotes, completionNotes
         FROM requests r, employees e
         WHERE ".$id." = reqID;";
     $findresult = mysqli_query($sqli, $findsql) or die(mysqli_error($sqli));
@@ -235,30 +245,40 @@ function findItem($id, $sqli){
         $description = stripslashes($info['description']);
         $lName = stripslashes($info['lName']);
         $fName = stripslashes($info['fName']);
-        //Displaying detailed reportManager & maintance only buttons and notes.
+        $compNotes = stripslashes($info['completionNotes']);
+        $appvNotes = stripslashes($info['approvalNotes']);
+        //Displaying detailed reportManager & maintance only buttons and notes. 
         echo"
         <table>
             <tr>
-                <th>Title</th><th>Request Date</th><th>Approval Date</th><th>Completion Date</th>
-            </tr><tr>
-                <td>".$request_title."</td><td>".$reqDate."</td><td>".$appvDate."</td><td>".$compDate."</td>
-            </tr><tr>
-                <th>Program</th><th>Site</th><th colspan='2'>Descripton</th>
-            </tr><tr>
-                <td>".$program."</td><td>".$site_name."</td><td colspan='2' rowspan='3'>".$description."</td>
-            </tr><tr>
-                <th>Employee</th><th>Priority</th>
-            </tr><tr>
-                <td>".$fName." ".$lName."</td><td>".choosePriority($priority)."</td>
+                <th><b>Title</b></th> 
+                <td colspan='2' style='border-top:none'>".$request_title."</td>
             </tr>
-        </table>";
-        //Manager & maintance only buttons and notes.
-        echo"
-            <h3>Notes</h3>
-            <form action='' method='POST'>
-            <textarea cols='40' rows='3' name='notes'>Notes</textarea>
-            <input type='submit' value='Complete' name='complete'> <input type='submit' value='Approve' name='approve'>
-            </form>";
+            <tr>
+                <th><b>Priority</b></th><th><b>Status</b></th><th><b>Employee</b></th>
+            <tr>
+                <td>".choosePriority($priority)."</td><td>".$status."</td><td>".$fName." ".$lName."</td>
+            </tr>
+            <tr>
+                <th><b>Request Date</b></th><th>Approval Date</th><th>Completion Date</b></th>
+            </tr><tr>
+               <td>".$reqDate."</td><td>".$appvDate."</td><td>".$compDate."</td>
+            </tr>
+            <tr>
+                <th><b>Site</th><th colspan='2'>Program</b></th>
+            </tr>
+            <tr>
+                <td>".$site_name."</td><td colspan='2'>".$program."</td>
+            </tr>
+        </table>
+        <h3>Description: </h3>
+            <textarea  style = 'resize:none; width:100%;height:100px;'>".$description."<br>Completion Notes:<br>".$compNotes."<br>Approval Notes:<br>".$appvNotes."</textarea>
+        
+        <h3>Notes</h3>
+        <form action='' method='POST'>
+            <textarea  style = 'resize:none; width:100%px;height:100px;' name='notes'></textarea></th>
+            <input type='submit' value='Complete' name='complete'> <input type='submit' value='Approve' name='approve'> <input type='submit' value='Deny' name='deny'>
+        </form>";
     }
 }
 [/insert_php]
