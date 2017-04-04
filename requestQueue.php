@@ -13,80 +13,88 @@ th, td {padding: .5em;
         text-align: center;}
 .filterDiv  {float: left;
              padding: 5px;}
-select {padding: 4px;}
+select {padding: 5px;}
 </style>
 
 <h1>Maintenance Request</h1>
-<h2>Queue of requested maintenance</h2>
+<h3>Queue of requested maintenance</h3>
 <hr>
-<div class="filterDiv">
-<!--Link to Maintenance Request Form-->
-<a href="http://localhost/wordpress/?page_id=2226 "><button>Request Maintenance Form</button></a>
-<!--Link for managers to create new employee account-->
-<a href="http://localhost/wordpress/?page_id=2032"><button>Create Employee Account</button></a></div>
 
-<!--Filter by option form-->
-<form method="POST">
-<h3>Filter by:</h3>
-    <!--Filter by sites-->
-    <div class='filterDiv'><h3>Site:</h3>
-    <select id='selectSite'>
-        <option value='Transition_House'>Transition House
-        <option value='Casimir_Court'>Casimir Court
-        <option value='46th_Avenue'>46th Avenue
-        <option value='Armstrong'>Armstrong
-        <option value='Courthouse'>Courthouse
-        <option value='Creekside'>Creekside
-    </select></div>
-    <!--Filter by programs-->
-    <div class='filterDiv'><h3>Program:</h3>
-    <select  id='selectProgram'>
+[insert_php]
+$Mainbuttons = "<div class='filterDiv'>
+     <a href='http://localhost/wordpress/?page_id=2226'><button>Request Maintenance Form</button></a> ";
+if($_COOKIE['auth'] == 3){
+     $Mainbuttons .= "<a href='http://localhost/wordpress/?page_id=2032'><button>Create Employee Account</button></a>";
+}
+$Mainbuttons .= "</div><br><br>";
+echo $Mainbuttons;
+[/insert_php]
+
+<h2 style='padding-top: 2em'>Filter by:</h2><hr>
+<form action ='' method="POST">
+<table style='border: none'>
+ <tr><th>Site:</th><th>Program:</th><th>Status:</th><th>Priority:</th></tr> 
+    <tr><td><select id='selectSite' name='selectSite' style='padding:5px;'>
+	<option value='None'>Site</option>
+        <option value='Transition House'> Transition House</option>
+        <option value='Casimir Court'> Casimir Court</option>
+        <option value='46th Avenue'>46th Avenue</option>
+        <option value='Armstrong'>Armstrong</option>
+        <option value='Courthouse'>Courthouse</option>
+        <option value='Creekside'>Creekside</option>
+    </select></td>
+    
+<td>
+    <select  id='selectProgram' name='selectProgram' style='padding:5px;'>
       <option value='None'>Program
-      <option value='Transition_House'>Transition House
-      <option value='Support_to_Young_Parents'>Support to Young Parents
-      <option value='Casimir_Court'>Casimir Court
-      <option value='Oak_Centre'>Oak Centre
+      <option value='Transition House'>Transition House
+      <option value='Support to Young Parents'>Support to Young Parents
+      <option value='Casimir Court'>Casimir Court
+      <option value='Oak Centre'>Oak Centre
       <option value='Administration'>Administration
-      <option value='Children_Who_Witness_Abuse_Vernon'>Children Who Witness Abuse – Vernon
-      <option value='Children_Who_Witness_Abuse_Armstrong'>Children Who Witness Abuse – Armstrong
-      <option value='Stopping_the_Violence_Vernon'>Stopping the Violence – Vernon
-      <option value='Stopping_the_Violence_Armstrong'>Stopping the Violence – Armstrong
+      <option value='Children Who Witness Abuse – Vernon'>Children Who Witness Abuse – Vernon
+      <option value='Children Who Witness Abuse – Armstrong'>Children Who Witness Abuse – Armstrong
+      <option value='Stopping the Violence – Vernon'>Stopping the Violence – Vernon
+      <option value='Stopping the Violence – Armstrong'>Stopping the Violence – Armstrong
       <option value='Outreach'>Outreach
-      <option value='Specialized_Victim_Assistance'>Specialized Victim Assistance
-      <option value='Homelessness_Prevention'>Homelessness Prevention
-      <option value='Legal_Services_Community_Partner'>Legal Services Community Partner
-      <option value='Prevention_&_Awareness'>Prevention & Awareness
+      <option value='Specialized Victim Assistance'>Specialized Victim Assistance
+      <option value='Homelessness Prevention'>Homelessness Prevention
+      <option value='Legal Services Community Partner'>Legal Services Community Partner
+      <option value='Prevention & Awareness'>Prevention & Awareness
       <option value='Other'>Other
-    </select></div>
-    <!--Filter by status-->
-    <div class='filterDiv'><h3>Status:</h3>
-    <select id='selectStatus'>
+    </select></td>
+    
+<td>
+    <select id='selectStatus' name='selectStatus' style='padding:5px'>
       <option value='None'>Status 
       <option value='Completed'>Completed
-      <option value='notCompleted'>Not Completed
-      <option value='notYetApproved'>Not Yet Approved
-      <option value='notApproved'>Not Approved
-    </select></div>
-    <!--Filter by priority-->
-    <div class='filterDiv'><h3>Priority:</h3>
-    <select id='selectPriority'>
+      <option value='Approved'>Approved
+      <option value='Not Yet Approved'>Not Yet Approved
+      <option value='Not Approved'>Not Approved
+    </select></td>
+    
+<td>
+    <select id='selectPriority' name='selectPriority' style='padding:5px'>
       <option value='None'>Priority  
       <option value='High'>High
       <option value='Medium'>Medium
       <option value='Low'>Low
-    </select></div>
-    <!--Filter by Request Date -->
-    <div class='filterDiv'><h3>Request Date:</h3>
-    <input  type='date' data-date-inline-picker='true'/></div>
-    <!--Filter by Approve Date -->
-    <div class='filterDiv'><h3>Approval Date:</h3>
-    <input  type='date' data-date-inline-picker='true'/></div>
-    <!--Filter by Completed Date -->
-    <div class='filterDiv'><h3>Completed Date:</h3>
-    <input type='date' data-date-inline-picker='true'/></div>
-    <div class='filterDiv' style='padding-top:2em'><input type='button' style='padding: 5px' value='Filter'></div>
-</form>
+    </select></td></tr>
 
+<tr style='length:100%'><th>Requested Between:</th><th>Approval Between:</th><th>Completed Between:</th><th></th></tr>
+<tr style='length:100%'><td>
+	<input  type='date' name='reqDateMin' data-date-inline-picker='true' />
+    <input  type='date' name='reqDateMax' data-date-inline-picker='true' /></td>
+    <!-- Approve Date -->
+    <td>
+	<input  type='date' name='approvalDateMin' data-date-inline-picker='true' />
+	<input  type='date' name='approvalDateMax' data-date-inline-picker='true' /></td>
+    <!-- Completed Date -->
+    <td>
+	<input  type='date' name='completedDateMin' data-date-inline-picker='true' />
+    <input type='date' name='completedDateMax' data-date-inline-picker='true' /></td>
+    <td><input type='submit' name='submit' value='Filter'></td></tr></table>
+</form>
     
 [insert_php]
 //Connecting to Database
@@ -112,7 +120,9 @@ if (isset($_POST['deny']) && isset($_GET['id']))
 if (isset($_GET['id'])) 
     findItem(filter_input(INPUT_GET,id), $mysqli);
 
-echo"<table>
+echo"
+<h2 style='padding-top: 2em'>Maintenance Queue</h2><hr>
+<table>
     <tr>
         <th>Request Title</th>
         <th>Site</th>
@@ -132,9 +142,109 @@ unset($_SESSION['CreateError']);
 $sql = "SELECT reqTitle, priority,
     program, site, description, 
     reqDate, approvalDate, completionDate, status, username, reqID
-    FROM requests
-    ORDER BY reqDate DESC
-    LIMIT 10 OFFSET ".$tableOffset;
+    FROM requests";
+
+//Beginning of dynamic queries
+
+if(isset($_POST['submit'])){
+    $tableOffset = 0;}
+
+if(isset($_POST['selectSite']) && filter_input(INPUT_POST, 'selectSite') != 'None') {	//filter by site
+	$selectSite = filter_input(INPUT_POST, 'selectSite');
+	$sql .= " WHERE site = '".$selectSite."'";
+	$MultipleAnds = TRUE;
+	
+}  
+if(isset($_POST['selectProgram']) && filter_input(INPUT_POST, 'selectProgram') != 'None') {  //filter by program
+	$selectProgram = filter_input(INPUT_POST, 'selectProgram');
+	if($MultipleAnds == TRUE) { 
+		$sql .= " AND "; 
+	}else {
+		$sql .=" WHERE ";
+		$MultipleAnds = TRUE;
+	}
+	$sql .= "program = '".$selectProgram."'";
+} 
+if(isset($_POST['selectStatus']) && filter_input(INPUT_POST, 'selectStatus') != 'None') {  //filter by status
+	$selectStatus = filter_input(INPUT_POST, 'selectStatus');
+	if($MultipleAnds == TRUE){
+		$sql .= " AND ";
+	}else {
+		$sql .=" WHERE ";
+		$MultipleAnds = TRUE;
+	}
+	$sql .= "status = '".$selectStatus."'";
+}
+if(isset($_POST['selectPriority']) && filter_input(INPUT_POST, 'selectPriority') != 'None') {  //filter by priority
+	$selectPriority = changePriority((filter_input(INPUT_POST, 'selectPriority')));
+	if ($MultipleAnds == TRUE){
+		$sql .= " AND ";
+	}else{
+		$sql .=" WHERE ";
+		$MultipleAnds = TRUE;
+	}
+	$sql .= "priority = '".$selectPriority."'";
+}
+if($_POST['reqDateMin'] != NULL) {  //filter by request date
+	$selectReqDateMin = filter_input(INPUT_POST, 'reqDateMin') ;
+	if ($MultipleAnds == TRUE){
+		$sql .= " AND ";
+	}else{
+		$sql .=" WHERE ";
+		$MultipleAnds = TRUE;
+	}
+	if($_POST['reqDateMax'] == NULL) {
+		$sql .= "(reqDate BETWEEN '".$selectReqDateMin." 00:00:00' AND SYSDATE())"; 
+		echo "No max request-date chosen, using current date as max.";	//make this pretty.. use session variable 
+	}else {
+		$selectReqDateMax = filter_input(INPUT_POST, 'reqDateMax');
+		$sql .= "(reqDate BETWEEN '".$selectReqDateMin." 00:00:00' AND '".$selectReqDateMax." 00:00:00')";
+	}
+}
+if($_POST['approvalDateMin'] != NULL) {  //filter by approval date
+	$selectApprovalDateMin = filter_input(INPUT_POST, 'approvalDateMin');
+	if ($MultipleAnds == TRUE){
+		$sql .= " AND ";
+	}else{
+		$sql .=" WHERE ";
+		$MultipleAnds = TRUE;
+	}
+	if($_POST['approvalDateMax'] == NULL) {
+		$sql .= "(approvalDate BETWEEN '".$selectApprovalDateMin."' AND SYSDATE())"; 
+		echo "No max approval-date chosen, using current date as max.";	//make this pretty.. use session variable 
+	}else {
+		$selectApprovalDateMax = filter_input(INPUT_POST, 'approvalDateMax');
+		$sql .= "(approvalDate BETWEEN '".$selectApprovalDateMin."' AND '".$selectApprovalDateMax."')";
+	}
+}
+if($_POST['completedDateMin'] != NULL) {  //filter by completed date
+	$selectCompletedDateMin = filter_input(INPUT_POST, 'completedDateMin');
+	if ($MultipleAnds == TRUE){
+		$sql .= " AND ";
+	}else{
+		$sql .=" WHERE ";
+		$MultipleAnds = TRUE;
+	}
+	if($_POST['completedDateMax'] == NULL) {
+		$sql .= "(completionDate BETWEEN '".$selectCompletedDateMin."' AND SYSDATE())"; 
+		echo "No max completion-date chosen, using current date as max.";	//make this pretty.. use session variable 
+	}else {
+		$selectCompletedDateMax = filter_input(INPUT_POST, 'completedDateMax');
+		$sql .= "(completionDate BETWEEN '".$selectCompletedDateMin."' AND '".$selectCompletedDateMax."')";
+	}
+}
+
+$sql .= " ORDER BY reqDate DESC ";
+
+if(isset($_POST['submit'])){
+    $_SESSION['sql'] = $sql;
+}
+
+if(isset($_GET['offset']) && ($_GET['offset'] >= 0 || $_GET['offset'] <= 0) && isset($_SESSION['sql'])){
+    $sql = $_SESSION['sql'];
+}
+
+$sql .= " LIMIT 10 OFFSET ".$tableOffset;
 //Querying database
 $result = mysqli_query($mysqli, $sql) or die(mysqli_error($mysqli));
 
@@ -199,6 +309,22 @@ function choosePriority($proiLevel){
     return $priority;
 }
 
+function changePriority($proiLevel){
+    $priority;
+    switch($proiLevel){
+        case "Low":
+        $priority = 1;
+        break;
+        case "Medium":
+        $priority = 2;
+        break;
+        case "High":
+        $priority = 3;
+        break;
+    }
+    return $priority;
+}
+
 //Updating requests when completed
 function completeRequest($id, $notes, $sqliConnect){
     $completeSQL = "UPDATE requests
@@ -218,7 +344,7 @@ function approveRequest($id, $notes, $sqliConnect){
 //Updating requests when approved
 function denyRequest($id, $notes, $sqliConnect){
     $denySQL = "UPDATE requests
-            SET approvalNotes='".$notes."', status='Denied'
+            SET approvalNotes='".$notes."', status='Not Approved'
             WHERE reqID=".$id.";";
     $denyResult = mysqli_query($sqliConnect, $denySQL) or die(mysqli_error($sqliConnect));
 }
@@ -229,7 +355,7 @@ function findItem($id, $sqli){
     $findsql = "SELECT reqTitle, priority, program, site, description, 
         reqDate, approvalDate, completionDate, status, e.fName, e.lName, approvalNotes, completionNotes
         FROM requests r, employees e
-        WHERE ".$id." = reqID;";
+        WHERE ".$id." = reqID AND r.username = e.username;";
     $findresult = mysqli_query($sqli, $findsql) or die(mysqli_error($sqli));
     if(mysqli_num_rows($findresult) >= 1) {
         //Storing filtered data
@@ -249,6 +375,7 @@ function findItem($id, $sqli){
         $appvNotes = stripslashes($info['approvalNotes']);
         //Displaying detailed reportManager & maintance only buttons and notes. 
         echo"
+        <h1 style='padding-top: 2em;'>Maintenance Details</h1><hr>
         <table>
             <tr>
                 <th><b>Title</b></th> 
@@ -271,14 +398,18 @@ function findItem($id, $sqli){
                 <td>".$site_name."</td><td colspan='2'>".$program."</td>
             </tr>
         </table>
-        <h3>Description: </h3>
-            <textarea  style = 'resize:none; width:100%;height:100px;'>".$description."<br>Completion Notes:<br>".$compNotes."<br>Approval Notes:<br>".$appvNotes."</textarea>
-        
-        <h3>Notes</h3>
-        <form action='' method='POST'>
-            <textarea  style = 'resize:none; width:100%px;height:100px;' name='notes'></textarea></th>
-            <input type='submit' value='Complete' name='complete'> <input type='submit' value='Approve' name='approve'> <input type='submit' value='Deny' name='deny'>
-        </form>";
+        <h3>Description: </h3><p>".$description."</p>
+        <h3>Completion Notes:</h3><p>".$compNotes."</p>
+        <h3>Approval Notes:</h3><p>".$appvNotes."</p>";
+         
+        $detailsForm;
+        if($_COOKIE['auth'] == 2 || $_COOKIE['auth'] == 3){
+            $detailsForm .= "<h3>Notes</h3> <form action='' method='POST'>
+            <textarea  style = 'resize:none; width:100%px;height:100px;' name='notes'></textarea>
+            <input type='submit' value='Complete' name='complete'>"; }
+        if($_COOKIE['auth'] == 3){
+            $detailsForm .= " <input type='submit' value='Approve' name='approve'> <input type='submit' value='Deny' name='deny'>";}
+        echo $detailsForm."</form>";
     }
 }
 [/insert_php]
