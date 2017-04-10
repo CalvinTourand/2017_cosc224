@@ -35,7 +35,7 @@ echo $Mainbuttons;
 <table style='border: none'>
  <tr><th>Site:</th><th>Program:</th><th>Status:</th><th>Priority:</th></tr> 
     <tr><td><select id='selectSite' name='selectSite' style='padding:5px;'>
-	<option value='None'>Site</option>
+	<option value='None'>Any Site</option>
         <option value='Transition House'> Transition House</option>
         <option value='Casimir Court'> Casimir Court</option>
         <option value='46th Avenue'>46th Avenue</option>
@@ -46,7 +46,7 @@ echo $Mainbuttons;
     
 <td>
     <select  id='selectProgram' name='selectProgram' style='padding:5px;'>
-      <option value='None'>Program
+      <option value='None'>Any Program
       <option value='Transition House'>Transition House
       <option value='Support to Young Parents'>Support to Young Parents
       <option value='Casimir Court'>Casimir Court
@@ -66,16 +66,17 @@ echo $Mainbuttons;
     
 <td>
     <select id='selectStatus' name='selectStatus' style='padding:5px'>
-      <option value='None'>Status 
+      <option value='None'>Any Status 
       <option value='Completed'>Completed
+      <option value='In Progress'>In Progress
       <option value='Approved'>Approved
-      <option value='Not Yet Approved'>Not Yet Approved
-      <option value='Not Approved'>Not Approved
+      <option value='Pending'>Pending
+      <option value='Cancelled'>Cancelled
     </select></td>
     
 <td>
     <select id='selectPriority' name='selectPriority' style='padding:5px'>
-      <option value='None'>Priority  
+      <option value='None'>Any Priority  
       <option value='High'>High
       <option value='Medium'>Medium
       <option value='Low'>Low
@@ -93,7 +94,8 @@ echo $Mainbuttons;
     <td>
 	<input  type='date' name='completedDateMin' data-date-inline-picker='true' />
     <input type='date' name='completedDateMax' data-date-inline-picker='true' /></td>
-    <td><input type='submit' name='submit' value='Filter'></td></tr></table>
+    <td><input type='submit' name='filter' value='Filter'>
+        <input type='submit' name='clear' value='Clear Filter'></td></tr></table>
 </form>
     
 [insert_php]
@@ -109,14 +111,18 @@ if(isset($_GET['offset']) && $_GET['offset'] >= 0){
 }
 
 if (isset($_POST['complete']) && isset($_GET['id']))
-    completeRequest(filter_input(INPUT_GET,id), filter_input(INPUT_POST,notes), $mysqli);
+    completeRequest(filter_input(INPUT_GET,id), filter_input(INPUT_POST,comNotes), filter_input(INPUT_POST, detailPriority), $mysqli);
 if (isset($_POST['approve']) && isset($_GET['id']))
-    approveRequest(filter_input(INPUT_GET,id), filter_input(INPUT_POST,notes), $mysqli);
+    approveRequest(filter_input(INPUT_GET,id), filter_input(INPUT_POST,appNotes), filter_input(INPUT_POST, detailPriority), $mysqli);
 if (isset($_POST['deny']) && isset($_GET['id']))
-    denyRequest(filter_input(INPUT_GET,id), filter_input(INPUT_POST,notes), $mysqli);
-
+    denyRequest(filter_input(INPUT_GET,id), filter_input(INPUT_POST,appNotes), filter_input(INPUT_POST, detailPriority), $mysqli);
+if (isset($_POST['start']) && isset($_GET['id']))
+    startRequest(filter_input(INPUT_GET,id), filter_input(INPUT_POST,comNotes), filter_input(INPUT_POST, detailPriority), $mysqli);
 
 //If queue item selected display the details page
+if(isset($_POST['filter'])){
+    $tableOffset = 0;
+    unset($_GET['id']);}
 if (isset($_GET['id'])) 
     findItem(filter_input(INPUT_GET,id), $mysqli);
 
@@ -142,12 +148,12 @@ unset($_SESSION['CreateError']);
 $sql = "SELECT reqTitle, priority,
     program, site, description, 
     reqDate, approvalDate, completionDate, status, username, reqID
-    FROM requests";
+    FROM requests ";
 
+if(!isset($_POST['filter'])){
+    $sql .= "WHERE status IN ('Pending', 'Approved', 'In Progress')";
+}
 //Beginning of dynamic queries
-
-if(isset($_POST['submit'])){
-    $tableOffset = 0;}
 
 if(isset($_POST['selectSite']) && filter_input(INPUT_POST, 'selectSite') != 'None') {	//filter by site
 	$selectSite = filter_input(INPUT_POST, 'selectSite');
@@ -234,10 +240,15 @@ if($_POST['completedDateMin'] != NULL) {  //filter by completed date
 	}
 }
 
-$sql .= " ORDER BY reqDate DESC ";
+$sql .= " ORDER BY reqDate, approvalDate, completionDate";
 
-if(isset($_POST['submit'])){
+if(isset($_POST['filter'])){
     $_SESSION['sql'] = $sql;
+}
+
+if(isset($_POST['clear'])){
+    unset($_SESSION['sql']);
+    $tableOffset = 0;
 }
 
 if(isset($_GET['offset']) && ($_GET['offset'] >= 0 || $_GET['offset'] <= 0) && isset($_SESSION['sql'])){
@@ -326,25 +337,33 @@ function changePriority($proiLevel){
 }
 
 //Updating requests when completed
-function completeRequest($id, $notes, $sqliConnect){
+function completeRequest($id, $notes, $priority, $sqliConnect){
     $completeSQL = "UPDATE requests
-            SET completionDate=SYSDATE(), completionNotes='".$notes."', status='Completed'
+            SET completionDate=SYSDATE(), completionNotes='".$notes."', status='Completed', priority=".$priority."
             WHERE reqID=".$id.";";
     $completeResult = mysqli_query($sqliConnect, $completeSQL) or die(mysqli_error($sqliConnect));
 }
 
 //Updating requests when approved
-function approveRequest($id, $notes, $sqliConnect){
+function approveRequest($id, $notes, $priority, $sqliConnect){
     $approvedSQL = "UPDATE requests
-            SET approvalDate= SYSDATE(), approvalNotes='".$notes."', status='Approved'
+            SET approvalDate= SYSDATE(), approvalNotes='".$notes."', status='Approved', priority=".$priority."
             WHERE reqID=".$id.";";
     $approvedResult = mysqli_query($sqliConnect, $approvedSQL) or die(mysqli_error($sqliConnect));
 }
 
-//Updating requests when approved
-function denyRequest($id, $notes, $sqliConnect){
+//Updating requests when denied
+function denyRequest($id, $notes, $priority, $sqliConnect){
     $denySQL = "UPDATE requests
-            SET approvalNotes='".$notes."', status='Not Approved'
+            SET approvalNotes='".$notes."', status='Cancelled', priority=".$priority."
+            WHERE reqID=".$id.";";
+    $denyResult = mysqli_query($sqliConnect, $denySQL) or die(mysqli_error($sqliConnect));
+}
+
+//Updating requests when started
+function startRequest($id, $notes, $priority, $sqliConnect){
+    $denySQL = "UPDATE requests
+            SET completionNotes='".$notes."', status='In Progress', priority=".$priority."
             WHERE reqID=".$id.";";
     $denyResult = mysqli_query($sqliConnect, $denySQL) or die(mysqli_error($sqliConnect));
 }
@@ -398,18 +417,25 @@ function findItem($id, $sqli){
                 <td>".$site_name."</td><td colspan='2'>".$program."</td>
             </tr>
         </table>
+        <form action='' method='POST'>
         <h3>Description: </h3><p>".$description."</p>
-        <h3>Completion Notes:</h3><p>".$compNotes."</p>
-        <h3>Approval Notes:</h3><p>".$appvNotes."</p>";
+        <h3>Approval Notes:</h3>
+        <textarea  style = 'resize:none; width:100%px;height:100px;' name='appNotes'>".$appvNotes."</textarea>";
+        if($_COOKIE['auth'] == 3){
+            echo "<select id='selectPriority' name='detailPriority' style='padding:5px'>
+      <option value=".$priority.">".choosePriority($priority)."  
+      <option value='3'>High
+      <option value='2'>Medium
+      <option value='1'>Low
+    </select> <input type='submit' value='Approve' name='approve'> <input type='submit' value='Deny' name='deny'>";}
+        echo"
+        <h3>Completion Notes:</h3>
+        <textarea  style = 'resize:none; width:100%px;height:100px;' name='comNotes'>".$compNotes."</textarea>";
          
         $detailsForm;
         if($_COOKIE['auth'] == 2 || $_COOKIE['auth'] == 3){
-            $detailsForm .= "<h3>Notes</h3> <form action='' method='POST'>
-            <textarea  style = 'resize:none; width:100%px;height:100px;' name='notes'></textarea>
-            <input type='submit' value='Complete' name='complete'>"; }
-        if($_COOKIE['auth'] == 3){
-            $detailsForm .= " <input type='submit' value='Approve' name='approve'> <input type='submit' value='Deny' name='deny'>";}
-        echo $detailsForm."</form>";
+            echo "<input type='submit' value='Start' name='start'> <input type='submit' value='Complete' name='complete'>"; }
+        echo "</form>";
     }
 }
 [/insert_php]
