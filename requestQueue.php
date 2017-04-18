@@ -2,7 +2,7 @@
 session_start();
 if(!isset($_COOKIE['username'])){
     $_SESSION['LogError'] = "Session has timed out";
-    header('location: http://localhost/wordpress/?page_id=1938');
+    header('location: http://vwts.ca/employeelogin');
 }
 [/insert_php]
 <style>
@@ -17,14 +17,16 @@ select {padding: 5px;}
 </style>
 
 <h1>Maintenance Request</h1>
+<form method="POST" action="http://vwts.ca/employeelogin">
+<input style="float: right" type="submit" value="Logout" name="logout"></form>
 <h3>Queue of requested maintenance</h3>
 <hr>
 
 [insert_php]
 $Mainbuttons = "<div class='filterDiv'>
-     <a href='http://localhost/wordpress/?page_id=2226'><button>Request Maintenance Form</button></a> ";
+     <a href='http://vwts.ca/employeelogin/requestform'><button>Request Maintenance Form</button></a> ";
 if($_COOKIE['auth'] == 3){
-     $Mainbuttons .= "<a href='http://localhost/wordpress/?page_id=2032'><button>Create Employee Account</button></a>";
+     $Mainbuttons .= "<a href='http://vwts.ca/employeelogin/createemployeeaccount'><button>Create Employee Account</button></a>";
 }
 $Mainbuttons .= "</div><br><br>";
 echo $Mainbuttons;
@@ -84,17 +86,18 @@ echo $Mainbuttons;
 
 <tr style='length:100%'><th>Requested Between:</th><th>Approval Between:</th><th>Completed Between:</th><th></th></tr>
 <tr style='length:100%'><td>
-	<input  type='date' name='reqDateMin' data-date-inline-picker='true' />
-    <input  type='date' name='reqDateMax' data-date-inline-picker='true' /></td>
+	From: <input  type='date' name='reqDateMin' data-date-inline-picker='true' />
+    To: <input  type='date' name='reqDateMax' data-date-inline-picker='true' /></td>
     <!-- Approve Date -->
     <td>
-	<input  type='date' name='approvalDateMin' data-date-inline-picker='true' />
-	<input  type='date' name='approvalDateMax' data-date-inline-picker='true' /></td>
+	From: <input  type='date' name='approvalDateMin' data-date-inline-picker='true' />
+	To: <input  type='date' name='approvalDateMax' data-date-inline-picker='true' /></td>
     <!-- Completed Date -->
     <td>
-	<input  type='date' name='completedDateMin' data-date-inline-picker='true' />
-    <input type='date' name='completedDateMax' data-date-inline-picker='true' /></td>
-    <td><input type='submit' name='filter' value='Filter'>
+	From: <input  type='date' name='completedDateMin' data-date-inline-picker='true' />
+    To: <input type='date' name='completedDateMax' data-date-inline-picker='true' /></td>
+    <td>
+        <input type='submit' name='filter' value='Filter'>
         <input type='submit' name='clear' value='Clear Filter'></td></tr></table>
 </form>
     
@@ -110,21 +113,22 @@ if(isset($_GET['offset']) && $_GET['offset'] >= 0){
 	$tableOffset = 0;
 }
 
-if (isset($_POST['complete']) && isset($_GET['id']))
-    completeRequest(filter_input(INPUT_GET,id), filter_input(INPUT_POST,comNotes), filter_input(INPUT_POST, detailPriority), $mysqli);
-if (isset($_POST['approve']) && isset($_GET['id']))
-    approveRequest(filter_input(INPUT_GET,id), filter_input(INPUT_POST,appNotes), filter_input(INPUT_POST, detailPriority), $mysqli);
-if (isset($_POST['deny']) && isset($_GET['id']))
-    denyRequest(filter_input(INPUT_GET,id), filter_input(INPUT_POST,appNotes), filter_input(INPUT_POST, detailPriority), $mysqli);
-if (isset($_POST['start']) && isset($_GET['id']))
-    startRequest(filter_input(INPUT_GET,id), filter_input(INPUT_POST,comNotes), filter_input(INPUT_POST, detailPriority), $mysqli);
-
+if (isset($_POST['complete']) && isset($_POST['id']))
+    updateRequest(filter_input(INPUT_POST,id), filter_input(INPUT_POST,comNotes), filter_input(INPUT_POST, detailPriority), $mysqli, 'Completed');
+if (isset($_POST['approve']) && isset($_POST['id']))
+    updateRequest(filter_input(INPUT_POST,id), filter_input(INPUT_POST,appNotes), filter_input(INPUT_POST, detailPriority), $mysqli, 'Approved');
+if (isset($_POST['cancel']) && isset($_POST['id']))
+    updateRequest(filter_input(INPUT_POST,id), filter_input(INPUT_POST,appNotes), filter_input(INPUT_POST, detailPriority), $mysqli, 'Cancelled');
+if (isset($_POST['start']) && isset($_POST['id']))
+    updateRequest(filter_input(INPUT_POST,id), filter_input(INPUT_POST,comNotes), filter_input(INPUT_POST, detailPriority), $mysqli, 'Started');
+if (isset($_POST['delete']) && isset($_POST['id']))
+    updateRequest(filter_input(INPUT_POST,id), '', '', $mysqli, 'Deleted');
 //If queue item selected display the details page
 if(isset($_POST['filter'])){
     $tableOffset = 0;
-    unset($_GET['id']);}
-if (isset($_GET['id'])) 
-    findItem(filter_input(INPUT_GET,id), $mysqli);
+    unset($_POST['id']);}
+if (isset($_POST['id'])) 
+    findItem(filter_input(INPUT_POST,id), $mysqli);
 
 echo"
 <h2 style='padding-top: 2em'>Maintenance Queue</h2><hr>
@@ -143,6 +147,7 @@ echo"
     
 //Clearing any errors created in the Create Account Page
 unset($_SESSION['CreateError']);
+unset($_SESSION['LoginError']);
 
 //Selecting Queue items from request table
 $sql = "SELECT reqTitle, priority,
@@ -151,7 +156,7 @@ $sql = "SELECT reqTitle, priority,
     FROM requests ";
 
 if(!isset($_POST['filter'])){
-    $sql .= "WHERE status IN ('Pending', 'Approved', 'In Progress')";
+    $sql .= "WHERE status = 'Pending' || status = 'Approved' || status = 'In Progress'";
 }
 //Beginning of dynamic queries
 
@@ -284,7 +289,7 @@ if (mysqli_num_rows($result) >= 1) {
                 <td style='padding:1em'>".$approval_date."</td>
                 <td style='padding:1em'>".$finished_date."</td>
                 <td style='padding:1em'>".$status."</td>
-                <td style='padding:1em'><a href='http://localhost/wordpress/?page_id=1805&id=".$reqID."&offset=".$tableOffset."'>More Info</a></td>
+                <td style='padding:1em'><form action='' method='POST'><input type=hidden value='".$reqID."' name='id'><input type='submit' value='More Info'></form></td>
             </tr>";
     }
 }
@@ -297,7 +302,7 @@ if(mysqli_num_rows($result) >= 10){
 
 $display =
 	 "</table>
-	 <div style='text-align:right;'><a href='http://localhost/wordpress/?page_id=1805&offset=".($tableOffset-10)."'><button>Previous</button></a> <a href='http://localhost/wordpress/?page_id=1805&offset=".$tableOffsetNext."'><button>Next</button></a></div>";
+	 <div style='text-align:right;'><a href='http://vwts.ca/employeelogin/requestqueue?offset=".($tableOffset-10)."'><button>Previous</button></a> <a href='http://vwts.ca/employeelogin/requestqueue?offset=".$tableOffsetNext."'><button>Next</button></a></div>";
 echo $display;
 
 //Function to output priority
@@ -336,36 +341,27 @@ function changePriority($proiLevel){
     return $priority;
 }
 
-//Updating requests when completed
-function completeRequest($id, $notes, $priority, $sqliConnect){
-    $completeSQL = "UPDATE requests
-            SET completionDate=SYSDATE(), completionNotes='".$notes."', status='Completed', priority=".$priority."
-            WHERE reqID=".$id.";";
+//Update Request On Cancel, Approve, Complete, Start
+function updateRequest($id, $notes, $priority, $sqliConnect, $type){ 
+    $completeSQL = "UPDATE requests SET ";
+    switch($type){
+        case "Completed":
+        $completeSQL .= "completionDate=SYSDATE(), completionNotes='".$notes."', status='Completed' ";
+        break;
+        case "Cancelled":
+        $completeSQL .= "approvalNotes='".$notes."', status='Cancelled', priority=".$priority." ";
+        break;
+        case "Approved":
+        $completeSQL .= "approvalDate= SYSDATE(), approvalNotes='".$notes."', status='Approved', priority=".$priority." ";
+        break;
+        case "Started":
+        $completeSQL .= "completionNotes='".$notes."', status='In Progress' ";
+        break;
+        case "Deleted":
+        $completeSQL = "DELETE FROM requests ";
+    }
+    $completeSQL .= "WHERE reqID=".$id.";";
     $completeResult = mysqli_query($sqliConnect, $completeSQL) or die(mysqli_error($sqliConnect));
-}
-
-//Updating requests when approved
-function approveRequest($id, $notes, $priority, $sqliConnect){
-    $approvedSQL = "UPDATE requests
-            SET approvalDate= SYSDATE(), approvalNotes='".$notes."', status='Approved', priority=".$priority."
-            WHERE reqID=".$id.";";
-    $approvedResult = mysqli_query($sqliConnect, $approvedSQL) or die(mysqli_error($sqliConnect));
-}
-
-//Updating requests when denied
-function denyRequest($id, $notes, $priority, $sqliConnect){
-    $denySQL = "UPDATE requests
-            SET approvalNotes='".$notes."', status='Cancelled', priority=".$priority."
-            WHERE reqID=".$id.";";
-    $denyResult = mysqli_query($sqliConnect, $denySQL) or die(mysqli_error($sqliConnect));
-}
-
-//Updating requests when started
-function startRequest($id, $notes, $priority, $sqliConnect){
-    $denySQL = "UPDATE requests
-            SET completionNotes='".$notes."', status='In Progress', priority=".$priority."
-            WHERE reqID=".$id.";";
-    $denyResult = mysqli_query($sqliConnect, $denySQL) or die(mysqli_error($sqliConnect));
 }
 
 //Takes in choosen id and the sqli connection
@@ -417,17 +413,17 @@ function findItem($id, $sqli){
                 <td>".$site_name."</td><td colspan='2'>".$program."</td>
             </tr>
         </table>
-        <form action='' method='POST'>
+        <form action='' method='POST'><input type=hidden value='".$_POST['id']."' name='id'>
         <h3>Description: </h3><p>".$description."</p>
         <h3>Approval Notes:</h3>
         <textarea  style = 'resize:none; width:100%px;height:100px;' name='appNotes'>".$appvNotes."</textarea>";
         if($_COOKIE['auth'] == 3){
             echo "<select id='selectPriority' name='detailPriority' style='padding:5px'>
-      <option value=".$priority.">".choosePriority($priority)."  
+      <option value=".$priority.">Change Priority 
       <option value='3'>High
       <option value='2'>Medium
       <option value='1'>Low
-    </select> <input type='submit' value='Approve' name='approve'> <input type='submit' value='Deny' name='deny'>";}
+    </select> <input type='submit' value='Approve' name='approve'> <input type='submit' value='Cancel' name='cancel'> <input type='submit' value='Delete' name='delete' style='float:right'>";}
         echo"
         <h3>Completion Notes:</h3>
         <textarea  style = 'resize:none; width:100%px;height:100px;' name='comNotes'>".$compNotes."</textarea>";
