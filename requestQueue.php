@@ -37,7 +37,10 @@ echo $Mainbuttons;
 <table style='border: none'>
  <tr><th>Site:</th><th>Program:</th><th>Status:</th><th>Priority:</th></tr> 
     <tr><td><select id='selectSite' name='selectSite' style='padding:5px;'>
-	<option value='None'>Any Site</option>
+	<option value='None'>[insert_php]if(isset($_POST['selectSite']) && filter_input(INPUT_POST, 'selectSite') != 'None')
+        echo $_POST['selectSite']; 
+        else 
+        echo "Any Site";[/insert_php]</option>
         <option value='Transition House'> Transition House</option>
         <option value='Casimir Court'> Casimir Court</option>
         <option value='46th Avenue'>46th Avenue</option>
@@ -48,7 +51,7 @@ echo $Mainbuttons;
     
 <td>
     <select  id='selectProgram' name='selectProgram' style='padding:5px;'>
-      <option value='None'>Any Program
+      <option value='None'>[insert_php]if(isset($_POST['selectProgram']) && filter_input(INPUT_POST, 'selectProgram') != 'None') echo $_POST['selectProgram']; else echo "Any Program";[/insert_php]
       <option value='Transition House'>Transition House
       <option value='Support to Young Parents'>Support to Young Parents
       <option value='Casimir Court'>Casimir Court
@@ -68,7 +71,7 @@ echo $Mainbuttons;
     
 <td>
     <select id='selectStatus' name='selectStatus' style='padding:5px'>
-      <option value='None'>Any Status 
+      <option value='None'>[insert_php]if(isset($_POST['selectStatus']) && filter_input(INPUT_POST, 'selectStatus') != 'None') echo $_POST['selectStatus']; else echo "Any Status";[/insert_php] 
       <option value='Completed'>Completed
       <option value='In Progress'>In Progress
       <option value='Approved'>Approved
@@ -78,7 +81,7 @@ echo $Mainbuttons;
     
 <td>
     <select id='selectPriority' name='selectPriority' style='padding:5px'>
-      <option value='None'>Any Priority  
+      <option value='None'>[insert_php]if(isset($_POST['selectPriority']) && filter_input(INPUT_POST, 'selectPriority') != 'None') echo $_POST['selectPriority']; else echo "Any Priority";[/insert_php] 
       <option value='High'>High
       <option value='Medium'>Medium
       <option value='Low'>Low
@@ -107,8 +110,8 @@ $mysqli = mysqli_connect("localhost", "vwts_dbman1", 'p0]K,S5Tm,7U', "vwts_wpdb1
 
 //tableOffset to manage pages displayed on queue
 $tableOffset;
-if(isset($_GET['offset']) && $_GET['offset'] >= 0){
-    $tableOffset = $_GET['offset'];
+if(isset($_POST['offset']) && $_POST['offset'] >= 0){
+    $tableOffset = $_POST['offset'];
 }else{
 	$tableOffset = 0;
 }
@@ -256,7 +259,7 @@ if(isset($_POST['clear'])){
     $tableOffset = 0;
 }
 
-if(isset($_GET['offset']) && ($_GET['offset'] >= 0 || $_GET['offset'] <= 0) && isset($_SESSION['sql'])){
+if(isset($_POST['offset']) && ($_POST['offset'] >= 0 || $_POST['offset'] <= 0) && isset($_SESSION['sql'])){
     $sql = $_SESSION['sql'];
 }
 
@@ -302,7 +305,11 @@ if(mysqli_num_rows($result) >= 10){
 
 $display =
 	 "</table>
-	 <div style='text-align:right;'><a href='http://vwts.ca/employeelogin/requestqueue?offset=".($tableOffset-10)."'><button>Previous</button></a> <a href='http://vwts.ca/employeelogin/requestqueue?offset=".$tableOffsetNext."'><button>Next</button></a></div>";
+	 <div style='text-align:right;'><form action='' method='POST'>
+         <input type='hidden' value='".($tableOffset-10)."' name='offset'><input type='submit' value='Previous'></form>
+         <form action='' method='POST'>
+         <input type='hidden' value='".$tableOffsetNext."' name='offset'><input type='submit' value='Next'></form>
+         </form></div>";
 echo $display;
 
 //Function to output priority
