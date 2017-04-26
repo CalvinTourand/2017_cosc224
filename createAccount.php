@@ -1,38 +1,20 @@
-<body>
 <h1>Create Account</h1>
 <h2><strong>Please enter credentials for a new employee account</strong></h2>
 <hr />
-<?php /*[insert_php]*/if($_SESSION['CreateError']){echo"
-	<h2>".$_SESSION['logError']."</h2>";} /*[/insert_php]*/?>
-<form action="" method="POST">
-	Username:<br>
-	<input type="text" name="username"><br>
-	First name:<br>
-	<input type="text" name="fname"><br>
-	Last name:<br>
-	<input type="text" name="lname"><br>
-	Authority:<br>
-<select name="authority" onchange="changeAuthority()">
-         <option value="employee">Employee
-         <option value="maintenance">Maintenance
-         <option value="manager">Manager
-</select><br>
-	Password:<br>
-	<input type="password" name="password"><br>
-	Confirm password:<br>
-	<input type="password" name="confirm"><br>            
-	<input type="submit" name="submit" >
-	<input type="reset" name="reset" >
-   </form>
-</body>
 
-<!--[insert_php]-->
-<?php
+[insert_php]
 session_start();
+unset($_SESSION['sql']);
+if(!isset($_COOKIE['username'])){
+    $_SESSION['LogError'] = "Session has timed out";
+    header('location: http://vwts.ca/employeelogin');
+}elseif($_COOKIE['auth'] != 3){
+    header('location: http://vwts.ca/requestqueue');
+}
 if ((filter_input(INPUT_POST, 'confirm'))
         && (filter_input(INPUT_POST, 'password'))) {
     if ($_POST['password'] == $_POST['confirm']){
-    $_SESSION['CreateError'] = "";
+    unset($_SESSION['CreateError']);
     $authority;
     switch($_POST['authority']){
         case "employee":
@@ -56,11 +38,34 @@ if ((filter_input(INPUT_POST, 'confirm'))
     echo $result." is the result";
     mysqli_close($con);
     //put header here to redirect back to login page
-    header('location: http://localhost/wordpress/?page_id=1805');
+    header('location: REQUESTQUEUE');
     }else{
-	    $_SESSION['CreateError'] = "Passwords Do Not Match";
-            header('location: http://localhost/wordpress/?page_id=2032');
+        $_SESSION['CreateError'] = "Passwords Do Not Match";
+        header('location: CREATEACCOUNT');
     }
 }
-?>
-<!--[/insert_php]-->
+[/insert_php]
+
+[insert_php]if($_SESSION['CreateError']){
+     echo"<h2>".$_SESSION['CreateError']."</h2>";} [/insert_php]
+
+<form action="" method="POST">Username:
+<input name="username" type="text" required/>
+<label>First name:</label>
+<input name="fname" type="text" required/>
+<label>Last name:</label>
+<input name="lname" type="text" required/>
+<label>Authority:</label>
+<select style="padding: 2px;" name="authority">
+<option value="employee">Employee</option>
+<option value="maintenance">Maintenance</option>
+<option value="manager">Manager</option>
+</select>
+<label>Password:</label>
+<input name="password" type="password" required/>
+<label>Confirm password:</label>
+<input name="confirm" type="password" required/>
+
+<input name="reset" type="reset" /> <input name="submit" type="submit" />
+<a href="http://vwts.ca/employeelogin/requestqueue">Back</a>
+</form>&nbsp;
