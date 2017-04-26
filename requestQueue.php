@@ -360,6 +360,13 @@ function updateRequest($id, $notes, $priority, $sqliConnect, $type){
         break;
         case "Approved":
         $completeSQL .= "approvalDate= SYSDATE(), approvalNotes='".$notes."', status='Approved', priority=".$priority." ";
+        $emailResult = mysqli_query($sqliConnect, "SELECT reqTitle FROM requests WHERE reqID = ".$id);
+        $info = mysqli_fetch_array($emailResult);
+        $to = "Pernell.s@vwts.ca";
+        $subject = "Notice: New Maintenance Approved";
+        $body= "Hello Maintenance, \n\n A new maintenance request has been approved: \n Title: ".stripslashes($info['reqTitle'])." \n Go to the Queue page or follow the link bellow: \n http://vwts.ca/employeelogin";
+        $headers = "To: Pernell.s@vwts.ca \r\n From: teamVWT@gmail.com";
+        mail($to,$subject,$body,$headers);
         break;
         case "Started":
         $completeSQL .= "completionNotes='".$notes."', status='In Progress' ";
@@ -441,4 +448,5 @@ function findItem($id, $sqli){
         echo "</form>";
     }
 }
+
 [/insert_php]
